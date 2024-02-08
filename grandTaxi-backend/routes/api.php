@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\TripController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,9 +40,15 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'drivers'], function (
     Route::put('/update', [DriverController::class, 'update']);
     Route::get('me', [DriverController::class, 'me']);
     Route::get('/drivers', [DriverController::class, 'index']);
-    // Route::get('/trips/{trip}', [TripController::class, 'show']);
-    // Route::get('/myTrips/', [TripController::class, 'showAll']);
-    // Route::get('/allTrips', [TripController::class, 'showTripsMeAndAdmin']);
+});
+
+
+// trip routes
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'trips'], function () {
+
+    Route::post('/create', [TripController::class, 'create']);
+    Route::put('/update', [TripController::class, 'update']);
+    Route::get('/', [TripController::class, 'index']);
 });
 
 

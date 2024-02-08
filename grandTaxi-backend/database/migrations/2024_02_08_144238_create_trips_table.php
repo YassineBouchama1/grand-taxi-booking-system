@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('driver_id')->constrained('drivers')->onDelete('cascade');
+            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
             $table->unsignedInteger('duration_minutes');
             $table->foreignId('pick_up_city_id')->constrained('cities')->onDelete('cascade');
-            $table->foreignId('destination_city)id')->constrained('cities')->onDelete('cascade');
+            $table->foreignId('destination_city_id')->constrained('cities')->onDelete('cascade');
 
             // $table->string('pick_up_city');
             // $table->string('destination_city');
