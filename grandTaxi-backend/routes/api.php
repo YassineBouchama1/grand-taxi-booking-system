@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'auth'], function () {
 Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'drivers'], function () {
 
     Route::post('/create', [DriverController::class, 'create']);
+    Route::put('/update', [DriverController::class, 'update']);
     Route::get('me', [DriverController::class, 'me']);
     Route::get('/drivers', [DriverController::class, 'index']);
     // Route::get('/trips/{trip}', [TripController::class, 'show']);

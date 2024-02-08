@@ -51,6 +51,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    ///driver associated with the user
+    public function driver(): HasOne
+    {
+        return $this->hasOne(Driver::class);
+    }
     ///passenger associated with the user
 
     public function passenger(): HasOne
@@ -58,11 +63,6 @@ class User extends Authenticatable
         return $this->hasOne(Passenger::class);
     }
 
-    ///driver associated with the user
-    public function driver(): HasOne
-    {
-        return $this->hasOne(Driver::class);
-    }
 
     ///admin associated with the user
 

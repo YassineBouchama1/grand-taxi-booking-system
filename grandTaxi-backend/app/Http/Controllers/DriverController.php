@@ -93,22 +93,26 @@ class DriverController extends Controller
 
     public function me(Request $request)
     {
-        //1-check if driver has alread fill driver info
-        if (!$request->user()->hasDriverInformation()) {
-
-            // if not return empty array
-            return response()->json(['data' =>  []], 401);
-
-            //if already filled return it
-        } else {
-            $response = [
-                'status' => 'success',
-                'message' => 'User is created successfully.',
-                'data' =>   Auth::user()->driver,
-            ];
-            return response()->json($response, 201);
+        // Check if the user is authenticated and is a driver
+        if ($request->user()->isDriver()) {
+            // Check if the driver has filled driver information
+            if (!$request->user()->hasDriverInformation()) {
+                // If not, return a 404 response
+                return response()->json(['message' => 'Driver information not found.'], 404);
+            }
         }
+
+        $request->user()->driver;
+        // If the user is not a driver or has filled driver information, return the user details
+        $response = [
+            'status' => 'success',
+            'message' => 'User details retrieved successfully.',
+            'user' => $request->user()
+        ];
+
+        return response()->json($response, 200);
     }
+
 
 
     /**
@@ -116,7 +120,32 @@ class DriverController extends Controller
      */
     public function update(Request $request, Driver $driver)
     {
-        //
+        // Get the authenticated user's driver details
+        $driver = $request->user()->driver;
+
+        // Update driver data based on request input
+        $driver->fill($request->only([
+            'description',
+            'license_plate_number',
+            'vehicle_type',
+            'availability_status',
+            'rating',
+            'payment_type',
+            'location_latitude',
+            'location_longitude',
+            'revenue'
+        ]));
+
+        // Save the updated driver details
+        $driver->save();
+
+        $response = [
+            'status' => 'success',
+            'message' => 'Driver details updated successfully.',
+            'driver' => $driver
+        ];
+
+        return response()->json($response, 200);
     }
 
     /**
