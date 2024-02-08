@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\DriverController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,16 +16,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/auth/user', [AuthController::class, 'userInfo']);
+
+// rouet
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/auth/logout', [AuthController::class, 'logout']);
-    // Route::get('trips', [TripController::class, 'index']);
+
+// route for user
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'auth'], function () {
+    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'userInfo']);
+});
+
+
+//driver routes
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'drivers'], function () {
+
+    Route::post('/create', [DriverController::class, 'create']);
+    Route::get('me', [DriverController::class, 'me']);
+    Route::get('/drivers', [DriverController::class, 'index']);
     // Route::get('/trips/{trip}', [TripController::class, 'show']);
     // Route::get('/myTrips/', [TripController::class, 'showAll']);
     // Route::get('/allTrips', [TripController::class, 'showTripsMeAndAdmin']);
 });
 
-Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login'])->middleware('guest');
+
+
+
+
+
+Route::fallback(fn () => response()->json(['status' => false, 'message' => 'route not find'], 404));

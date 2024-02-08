@@ -22,7 +22,7 @@ class User extends Authenticatable
      */
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'profile_photo', 'contact_info', 'status', 'email_verified_at', 'last_online_at',
+        'name', 'email', 'password', 'role_id', 'profile_photo', 'contact_info', 'status', 'email_verified_at', 'last_online_at',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -46,6 +46,11 @@ class User extends Authenticatable
     ];
 
 
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
     ///passenger associated with the user
 
     public function passenger(): HasOne

@@ -18,7 +18,6 @@ class Driver extends Model
         'availability_status',
         'rating',
         'payment_type',
-
         'location_latitude',
         'location_longitude',
         'revenue'

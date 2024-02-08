@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->foreignId('role')->constrained('roles')->cascadeOnDelete();
+            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
             $table->string('profile_photo')->nullable();
             $table->string('contact_info')->nullable();
             $table->timestamp('last_online_at')->nullable(); // updated when driver logout

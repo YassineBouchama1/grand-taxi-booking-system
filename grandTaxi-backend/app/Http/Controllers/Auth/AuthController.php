@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Passenger;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -25,16 +26,20 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            //Validated
+            //1-Validated
             $validateUser = Validator::make(
                 $request->all(),
                 [
                     'name' => 'required',
                     'email' => 'required|email|unique:users,email',
-                    'password' => 'required'
+                    'password' => 'required',
+                    'role_id' => 'required',
+                    'contact_info' => 'required',
                 ]
             );
 
+
+            //2-if there is errors return it
             if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
@@ -42,23 +47,28 @@ class AuthController extends Controller
                     'errors' => $validateUser->errors()
                 ], 401);
             }
-
+            //3-create account
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => $request->role,
+                'role_id' => $request->role_id,
+                'status' => (int)$request->role_id === 3 ? 'inactive' : 'active'
             ]);
 
+            //4-generate token
+            // $data['token'] = $user->createToken($request->email)->plainTextToken;
+            // $data['user'] = $user;
 
-            $data['token'] = $user->createToken($request->email)->plainTextToken;
-            $data['user'] = $user;
+
+            // Retrieve the role name using the relationship
+            $roleName = $user->role->name;
 
 
             $response = [
                 'status' => 'success',
                 'message' => 'User is created successfully.',
-                'data' => $data,
+                'user Role' =>  $roleName,
             ];
 
             return response()->json($response, 201);
@@ -107,6 +117,7 @@ class AuthController extends Controller
 
             $data['token'] = $user->createToken($request->email)->plainTextToken;
             $data['user'] = $user;
+            // $data['isValid'] = $user->hasDriverInformation;
 
             $response = [
                 'status' => 'success',
@@ -115,8 +126,7 @@ class AuthController extends Controller
             ];
 
             return response()->json($response, 200);
-
-
+            
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -125,28 +135,20 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
+
+
+    public function logout()
     {
-        Auth::logout();
+        $user = auth()->user();
+        $user->last_online_at = now(); // update last oline at
+        $user->save();
 
-        // $request->session()->invalidate();
-
-        // $request->session()->regenerateToken();
+        $user->tokens()->delete();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'successfully logout'
-        ], 500);
+            'message' => 'Successfully Logged out'
+        ], 200);
     }
-
-    // public function logout()
-    // {
-    //     auth()->user()->tokens()->delete();
-
-    //     return response()->json([
-    //         'message' => 'Succesfully Logged out'
-    //     ], 200);
-    // }
 
     public function userInfo(Request $request)
     {
