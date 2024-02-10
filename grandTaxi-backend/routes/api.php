@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TripController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,8 +39,8 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'drivers'], function (
 
     Route::post('/create', [DriverController::class, 'create']);
     Route::put('/update', [DriverController::class, 'update']);
-    Route::get('me', [DriverController::class, 'me']);
-    Route::get('/drivers', [DriverController::class, 'index']);
+    Route::get('/show', [DriverController::class, 'show']);
+    // Route::get('/drivers', [DriverController::class, 'index']);
 });
 
 
@@ -47,9 +48,25 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'drivers'], function (
 Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'trips'], function () {
 
     Route::post('/create', [TripController::class, 'create']);
-    Route::put('/update', [TripController::class, 'update']);
-    Route::get('/', [TripController::class, 'index']);
+    Route::get('/', [TripController::class, 'getAllTrips']);
+    Route::get('/my', [TripController::class, 'myTrips']);
+    Route::get('/{id}', [TripController::class, 'show']);
+    Route::put('/update/{id}', [TripController::class, 'update']);
+    Route::put('/updateStatus/{id}', [TripController::class, 'updateStatus']);
 });
+
+
+// trip routes
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'reservations'], function () {
+
+    Route::post('/create', [ReservationController::class, 'create']);
+    Route::get('/', [ReservationController::class, 'index']);
+    Route::get('/{id}', [ReservationController::class, 'show']);
+    Route::put('/update/{id}', [ReservationController::class, 'update']);
+    Route::delete('/destroy/{id}', [ReservationController::class, 'destroy']);
+    Route::get('/restore/{id}', [ReservationController::class, 'restore']);
+});
+
 
 
 

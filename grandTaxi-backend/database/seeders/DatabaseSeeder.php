@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // $this->call(RolesTableSeeder::class);
-        $this->call(CityTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
+        // $this->call(CityTableSeeder::class);
 
         // \App\Models\Role::factory()->create([
         //     'name' => 'admin',

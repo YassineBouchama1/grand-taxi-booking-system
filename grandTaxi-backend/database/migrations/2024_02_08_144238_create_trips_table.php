@@ -17,12 +17,10 @@ return new class extends Migration
             $table->unsignedInteger('duration_minutes');
             $table->foreignId('pick_up_city_id')->constrained('cities')->onDelete('cascade');
             $table->foreignId('destination_city_id')->constrained('cities')->onDelete('cascade');
-
-            // $table->string('pick_up_city');
-            // $table->string('destination_city');
-
+            $table->enum('status', ['waiting', 'full', 'en_route', 'completed', 'expired'])->default('waiting');
             $table->dateTime('pickup_datetime');
             $table->decimal('price', 10, 2);
+            $table->integer('seats');
             $table->softDeletes();
             $table->timestamps();
         });

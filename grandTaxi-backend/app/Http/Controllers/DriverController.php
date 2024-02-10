@@ -37,34 +37,29 @@ class DriverController extends Controller
     // create driver info
     public function create(Request $request)
     {
-        $user = Auth::user();
-
-        // Check if the user already has a driver profile
-        if ($user->driver()->exists()) {
-            return response()->json(['message' => 'User already has a driver profile'], 400);
+        // Check if the user is authorized to create a driver profile
+        if (!$request->user()->can('create', Driver::class)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'You must be a Driver to create a reservation. or User already has a driver profile',
+            ], 401);
         }
 
+        $user = Auth::user();
 
         // Validate request data
         $validator = Validator::make($request->all(), [
             'description' => 'required|string',
             'license_plate_number' => 'required|string',
             'vehicle_type' => 'required|string',
-            // 'availability_status' => 'required|string',
-            // 'rating' => 'required|number',
             'payment_type' => 'required|string',
-            // 'location_latitude' => 'required|string',
-            // 'location_longitude' => 'required|string',
-            // 'revenue'
-
         ]);
 
-
-        //2-if there is errors return it
+        // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'validation error',
+                'message' => 'Validation error',
                 'errors' => $validator->errors()
             ], 401);
         }
@@ -77,37 +72,41 @@ class DriverController extends Controller
         // Save the driver profile
         $driver->save();
 
+        // Update the user status to active
+        $user->status = 'active';
+        $user->save();
+
         return response()->json(['message' => 'Driver profile created successfully'], 200);
     }
 
 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Driver $driver)
-    {
-        //
-    }
 
 
-    public function me(Request $request)
+
+
+
+    public function show(Request $request)
     {
-        // Check if the user is authenticated and is a driver
-        if ($request->user()->isDriver()) {
-            // Check if the driver has filled driver information
-            if (!$request->user()->hasDriverInformation()) {
-                // If not, return a 404 response
-                return response()->json(['message' => 'Driver information not found.'], 404);
-            }
+
+        if ($request->user()->status === 'inactive') {
+            return response()->json(['status' => false, 'message' => 'create your driver first ']);
         }
-
         $request->user()->driver;
+
+        // if (!$request->user()->can('view', $driver)) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => "this driver dosn't belong to you",
+        //     ], 401);
+        // }
+
+
         // If the user is not a driver or has filled driver information, return the user details
         $response = [
             'status' => 'success',
             'message' => 'User details retrieved successfully.',
-            'user' => $request->user()
+            'user' => $request->user(),
         ];
 
         return response()->json($response, 200);
@@ -123,6 +122,15 @@ class DriverController extends Controller
         // Get the authenticated user's driver details
         $driver = $request->user()->driver;
 
+
+        // chekc with poilices if user owen this driver
+        if (!$request->user()->can('update', $driver)) {
+            return response()->json([
+                'status' => false,
+                'message' => "you can't update driver cuz dosn't belong to you",
+            ], 401);
+        }
+
         // Update driver data based on request input
         $driver->fill($request->only([
             'description',
@@ -135,6 +143,7 @@ class DriverController extends Controller
             'location_longitude',
             'revenue'
         ]));
+
 
         // Save the updated driver details
         $driver->save();

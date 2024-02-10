@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,26 +52,44 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    
     ///driver associated with the user
     public function driver(): HasOne
     {
         return $this->hasOne(Driver::class);
     }
-    ///passenger associated with the user
 
-    public function passenger(): HasOne
+
+
+
+
+
+    //  return reservation depand of role user
+
+    public function reservations()
     {
-        return $this->hasOne(Passenger::class);
+        // return $this->hasMany(Reservation::class, 'passenger_id');
+        if ($this->role->name == 'passenger') {
+
+            return $this->hasMany(Reservation::class, 'passenger_id');
+        }
+        // else if ($this->role->name == 'driver') {
+
+        //     return $this->hasMany(Reservation::class, 'driver_id');
+        // }
+        else {
+            return $this->hasMany(Reservation::class);
+        }
     }
 
 
-    ///admin associated with the user
 
-    public function admin(): HasOne
+
+    ///driver associated with the user
+    public function trip(): HasMany
     {
-        return $this->hasOne(Admin::class);
+        return $this->hasMany(Trip::class);
     }
-
 
     //Determine if the user is a admin
     public function isAdmin(): bool
