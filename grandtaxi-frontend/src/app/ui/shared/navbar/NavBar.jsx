@@ -7,17 +7,20 @@ import Modal from "../Modal";
 import { useState } from "react";
 import FormLogin from "../../auth/login/FormLogin";
 import FormRegister from "../../auth/register/FormRegister";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
-
     const [toggleLogin, setToggleLogin] = useState(false)
-    const [toggleRegister, setToggleRegister] = useState(false)
+    const [toggleRegister, setToggleRegister] = useState(true)
+    const user = useSelector((state) => state.auth.user)
+    console.log(user)
     return <>
         <nav className=" bg-white border-gray-200 py-2 dark:bg-gray-900 shadow-b  shadow-lg">
             <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
                 <ul className="flex  justify-between flex-row space-x-8 ">
                     <li><i className="fa-solid fa-phone text-green-600"></i>
                         <a>+212638790915</a>
+                        {user ?'passenger':'login'}
                     </li>
 
                 </ul>
