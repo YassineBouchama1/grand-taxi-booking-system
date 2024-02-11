@@ -18,15 +18,7 @@ const FromSearch = () => {
                   <div class="col-span-2 sm:col-span-1 ">
                       <input type="date" name="date" id="date" class="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500" />
                   </div>
-                  <div class="col-span-2 sm:col-span-1 ">
-                      <select id="person" class="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
-                          <option selected>Choose a gost</option>
-                          <option value="US">1</option>s
-                          <option value="CA">2</option>
-                          <option value="FR">3</option>
-                          <option value="DE">4</option>
-                      </select>
-                  </div>
+                  
               </div>
 
               <div class="mt-4">
