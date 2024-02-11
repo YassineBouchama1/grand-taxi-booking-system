@@ -1,7 +1,20 @@
 'use client'
+import Image from "next/image";
 import Link from "next/link";
 const FormRegister = () => {
-    return <form className="mt-8 space-y-6" action="#" method="POST">
+    return <div className=" md:flex md:items-center md:justify-center sm:w-auto md:h-full    p-8   rounded-lg  bg-white ">
+        <div className="max-w-md w-full space-y-8">
+            <div className="text-center flex flex-col justify-center items-center">
+
+                <Image className="w-20 h-auto " src="/assets/logo.png" alt="traveklsmart" width='200' height='200' />
+                <h2 className="mt-6 text-3xl font-bold text-gray-900">
+                    Welcome to TravelSmart!
+                </h2>
+                <p className="mt-2 text-sm text-gray-500">Sign in your Account</p>
+            </div>
+
+
+    <form className="mt-8 space-y-6" action="#" method="POST">
         <input type="hidden" name="remember" value="true"></input>
         <div className="flex gap-x-2">
             <div className="relative">
@@ -42,6 +55,8 @@ const FormRegister = () => {
             <Link href="login" className="text-green-600 hover:text-green-600 no-underline hover:underline cursor-pointer transition ease-in duration-300">
                 Login</Link>
         </p>
-    </form>;
+    </form>
+        </div>
+    </div>
 };
 export default FormRegister;

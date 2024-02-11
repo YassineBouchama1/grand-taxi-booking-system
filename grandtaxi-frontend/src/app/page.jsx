@@ -3,6 +3,7 @@ import FromSearch from "./ui/home/fromSearch/fromSearch";
 
 import HomeLayout from "./layouts/HomeLayout";
 
+
 export default function Home() {
 
     return (
@@ -50,8 +51,8 @@ export default function Home() {
 
 
         </main>
+       
                     </HomeLayout>
 
-                
     );
 }

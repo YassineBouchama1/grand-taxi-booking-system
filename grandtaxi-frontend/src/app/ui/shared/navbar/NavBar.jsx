@@ -3,10 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRightToBracket } from "react-icons/fa6";
+import Modal from "../Modal";
+import { useState } from "react";
+import FormLogin from "../../auth/login/FormLogin";
+import FormRegister from "../../auth/register/FormRegister";
 
 const NavBar = () => {
+
+    const [toggleLogin, setToggleLogin] = useState(false)
+    const [toggleRegister, setToggleRegister] = useState(false)
     return <>
-        <nav className=   "bg-white border-gray-200 py-2 dark:bg-gray-900 shadow-b  shadow-lg">
+        <nav className=" bg-white border-gray-200 py-2 dark:bg-gray-900 shadow-b  shadow-lg">
             <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
                 <ul className="flex  justify-between flex-row space-x-8 ">
                     <li><i className="fa-solid fa-phone text-green-600"></i>
@@ -21,15 +28,28 @@ const NavBar = () => {
                         
                         <FaArrowRightToBracket size={15} className=" text-green-600" />
 
-                            <Link href='/login'>Sign in</Link>
-
+                            
+                        <button onClick={() => setToggleLogin(!toggleLogin)}>Sign in</button>
+                        <Modal
+                            shouldShow={toggleLogin}
+                            onRequestClose={() => setToggleLogin(false)}
+                        >
+                            <FormLogin />
+                        </Modal>
                     </li>
                     /
                     <li className="flex items-center gap-1">
 
                         <FaArrowRightToBracket size={15} className=" text-green-600" />
 
-                        <Link href='/register'>Sign up</Link>
+                        <button onClick={() => setToggleRegister(!toggleRegister)}>Sign up</button>
+<Modal
+                            shouldShow={toggleRegister}
+onRequestClose={() => setToggleRegister(false)}
+>
+   <FormRegister/>
+</Modal>
+
                     </li>
                 </ul>
             </div>
@@ -59,7 +79,7 @@ const NavBar = () => {
                             </svg>
                         </button>
                     </div>
-                    <div className="absolute lg:static top-16 left-0 right-0 z-[999] bg-white  items-center justify-between w-full lg:flex lg:w-auto lg:order-1 hidden " id="mobile-menu-2">
+                    <div className="absolute lg:static top-16 left-0 right-0 bg-white  items-center justify-between w-full lg:flex lg:w-auto lg:order-1 hidden " id="mobile-menu-2">
                         <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                             <li>
                                 <a href="./" className="block py-2 pl-3 pr-4 text-white bg-green-700 rounded lg:bg-transparent lg:text-green-700 lg:p-0 dark:text-white" aria-current="page">Home</a>
