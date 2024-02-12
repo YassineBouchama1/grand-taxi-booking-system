@@ -1,9 +1,9 @@
 
 import Image from "next/image";
-import FromSearch from "./ui/home/fromSearch/fromSearch";
 
 import HomeLayout from "./layouts/HomeLayout";
 import { getSession } from "@/lib/session";
+import FromSearch from "./ui/home/fromSearch/fromSearch";
 
 
 
