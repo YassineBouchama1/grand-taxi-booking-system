@@ -1,5 +1,6 @@
 'use client'
 import { setToken, setUser } from "@/Redux/auth/authSlice";
+import { create, createSession } from "@/lib/save";
 import { axiosClient } from "@/services/axios";
 import Image from "next/image";
 
@@ -65,14 +66,8 @@ const dispatch =useDispatch()
             const user = response.data.data.user
             dispatch(setToken(token));
             dispatch(setUser(user));
-
-            // await fetch("api/login", {
-            //     method: "POST",
-             
-            //     body: JSON.stringify(response.data.data.token),
-            // })
-            // setTimeout(() => router.refresh(), 5000)
-        
+            createSession(token,user)
+    
 
         } catch (error) {
             console.log(error);

@@ -10,6 +10,8 @@ const initialState= {
   start:null,
   end:null,
   date:null,
+  typeCar:null,
+  
 
 
   isloading: false,
@@ -27,6 +29,7 @@ export const TripSLice = createSlice({
       state.date = action.payload?.date;
       state.start = action.payload?.start;
       state.end = action.payload?.end;
+      state.typeCar = action.payload?.typeCar;
     },
   },
 

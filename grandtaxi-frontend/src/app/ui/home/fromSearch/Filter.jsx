@@ -1,6 +1,15 @@
-import { CiStar } from "react-icons/ci";
+'use client'
+
+import { setQuery } from "@/Redux/trip/tripSlice";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 const Filter = () => {
+    const dispatch = useDispatch()
+
+
+    const [type, setType] = useState(null)
+
     return <div class="bg-white basis-1/4	rounded-md w-full h-screen p-8 mx-auto">
         <div class=" flex justify-between  ">
             <p class='font-bold'>Filter</p><button id="restBtn" class="border-none ourline-none bg-transparent">Reset All</button>
@@ -17,7 +26,10 @@ const Filter = () => {
                     <input id="allcompany" type="radio" name="company" value="all" class="accent-green-600 border-2 w-4 h-4 text-green-600 bg-gray-100 border-green-300 rounded focus:ring-green-600" checked></input>
                     <span class="bg-[#f6f6f7] rounded-md w-2/2 px-2 flex gap-x-3 items-center">ALL</span>
                 </label>
-
+                <label for="allcompany" class="flex items-center gap-x-4 text-gray-400">
+                    <input onChange={(e) => dispatch(setQuery({ 'typeCar':e.target.value }))} id="allcompany" type="radio" name="company" value="tesla" class="accent-green-600 border-2 w-4 h-4 text-green-600 bg-gray-100 border-green-300 rounded focus:ring-green-600" ></input>
+                    <span class="bg-[#f6f6f7] rounded-md w-2/2 px-2 flex gap-x-3 items-center">tesla</span>
+                </label>
             </div>
 
         </div>

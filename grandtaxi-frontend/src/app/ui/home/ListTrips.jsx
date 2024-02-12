@@ -10,8 +10,9 @@ const ListTrips = () => {
   const params = useSearchParams();
   const [trips, setTrips] = useState([]);
   const date = useSelector((state) => state.trip.date) ;
-  const start = params.get('start') ? params.get('start') : useSelector((state) => state.trip.start);
-  const end = params.get('end') ? params.get('end') : useSelector((state) => state.trip.end);
+  const start = useSelector((state) => state.trip.start);
+  const end = useSelector((state) => state.trip.end);
+  const typeCar = useSelector((state) => state.trip.typeCar);
 
 
   useEffect(() => {
@@ -23,6 +24,9 @@ const ListTrips = () => {
           url += `&start=${start}`;
         }
         if (end) {
+          url += `&end=${end}`;
+        }
+        if (typeCar) {
           url += `&end=${end}`;
         }
       }

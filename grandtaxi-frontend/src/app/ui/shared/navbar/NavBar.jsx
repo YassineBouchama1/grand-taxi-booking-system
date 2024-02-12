@@ -25,8 +25,8 @@ const NavBar = () => {
                     </li>
 
                 </ul>
-                {token && token}
-                {token ? token :
+               
+                {user ? user.email :
                 (
 
                     <ul className=" flex justify-between gap-4 border border-solid border-gray-500 border-opacity-25 px-1.5 py-1    rounded-md	">
