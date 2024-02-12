@@ -1,14 +1,19 @@
+
 import Image from "next/image";
 import FromSearch from "./ui/home/fromSearch/fromSearch";
 
 import HomeLayout from "./layouts/HomeLayout";
+import { getSession } from "@/lib/session";
 
 
-export default function Home() {
 
+
+export default async function Home() {
+
+    const session = await getSession()
     return (
       <HomeLayout>
-
+            {session && session}
              <main className=" w-full lg:h-[450px] h-[550px] bg-white">
 
             <section className='flex  items-center justify-start pt-10 lg:justify-between flex-col lg:flex-row  max-w-screen-xl h-full gap-6 px-4 mx-auto '>

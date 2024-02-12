@@ -32,11 +32,12 @@ const FormRegister = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setCreatedMsg('')
+        setErrorsMsg('')
         const newErrors = {};
-        // if (!formData.name?.trim()) {
-        //     newErrors.name = 'Name is required';
-        // }
+        if (!formData.name?.trim()) {
+            newErrors.name = 'Name is required';
+        }
         if (!formData.contact_info?.trim()) {
             newErrors.contact_info = 'Phone is required';
         }
@@ -58,16 +59,22 @@ const FormRegister = () => {
             console.log(response);
             if (response.status === 201) {
                 setCreatedMsg(response.data.message)
+                e.target.reset(); 
             }
          
 
         } catch (error) {
-            // if there is any problem display it
-         console.log(error)
-            const errorMessages = Object.values(error.response.data.errors);
+            console.log(error);
 
-            setErrorsMsg(errorMessages);
-
+            // Check if error.response exists and has data and errors properties
+            if (error.response && error.response.data && error.response.data.errors) {
+                // Extract error messages from the response
+                const errorMessages = Object.values(error.response.data.errors);
+                setErrorsMsg(errorMessages);
+            } else {
+                // If the error structure is different or unknown, handle it accordingly
+                setErrorsMsg(['An unexpected error occurred.']);
+            }
         }
     };
 
@@ -129,7 +136,7 @@ const FormRegister = () => {
 
                 <div>
                     <button type="submit" className="w-full flex justify-center bg-gradient-to-r from-green-600 to-green-600  hover:bg-green-to-l hover:from-green-600 hover:to-green-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
-                        Sign in
+                        Sign up
                     </button>
                 </div>
                 <p className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-500">

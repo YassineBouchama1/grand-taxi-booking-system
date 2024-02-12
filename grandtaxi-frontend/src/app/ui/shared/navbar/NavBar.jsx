@@ -11,8 +11,9 @@ import { useSelector } from "react-redux";
 
 const NavBar = () => {
     const [toggleLogin, setToggleLogin] = useState(false)
-    const [toggleRegister, setToggleRegister] = useState(true)
+    const [toggleRegister, setToggleRegister] = useState(false)
     const user = useSelector((state) => state.auth.user)
+    const token = useSelector((state) => state.auth.token)
     console.log(user)
     return <>
         <nav className=" bg-white border-gray-200 py-2 dark:bg-gray-900 shadow-b  shadow-lg">
@@ -24,7 +25,11 @@ const NavBar = () => {
                     </li>
 
                 </ul>
-                <ul className=" flex justify-between gap-4 border border-solid border-gray-500 border-opacity-25 px-1.5 py-1    rounded-md	">
+                {token && token}
+                {user?user.user.name:
+                (
+
+                    <ul className=" flex justify-between gap-4 border border-solid border-gray-500 border-opacity-25 px-1.5 py-1    rounded-md	">
 
                     <li className="flex items-center gap-1">
 
@@ -36,7 +41,7 @@ const NavBar = () => {
                         <Modal
                             shouldShow={toggleLogin}
                             onRequestClose={() => setToggleLogin(false)}
-                        >
+                            >
                             <FormLogin />
                         </Modal>
                     </li>
@@ -48,13 +53,14 @@ const NavBar = () => {
                         <button onClick={() => setToggleRegister(!toggleRegister)}>Sign up</button>
 <Modal
                             shouldShow={toggleRegister}
-onRequestClose={() => setToggleRegister(false)}
+                            onRequestClose={() => setToggleRegister(false)}
 >
    <FormRegister/>
 </Modal>
 
                     </li>
                 </ul>
+            )}
             </div>
         </nav>
         <nav className="relative lg:static bg-white border-gray-200 py-2  shadow-b shadow-lg">

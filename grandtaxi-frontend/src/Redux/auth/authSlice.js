@@ -1,3 +1,4 @@
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -5,10 +6,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState= {
   role:'',
-  token:'',
+  token:localStorage.getItem('token')?localStorage.getItem('token'):null,
   email:'',
   status:'',
-    user: null,
+  user: null,
 
   isloading: false,
 };

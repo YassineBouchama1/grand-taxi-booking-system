@@ -1,9 +1,16 @@
-import HomeLayout from "../layouts/HomeLayout"
-import Filter from "../ui/home/fromSearch/Filter"
-import CardSearch from "../ui/home/fromSearch/cardSearch"
-import FormSearchLonger from "../ui/home/fromSearch/formSearchLonger"
+'use client'
+import HomeLayout from "../layouts/HomeLayout";
+import ListTrips from "../ui/home/ListTrips";
+import Filter from "../ui/home/fromSearch/Filter";
+import FormSearchLonger from "../ui/home/fromSearch/formSearchLonger";
 
-export default function Home() {
+export default   function Home() {
+
+
+
+
+
+
 
   return (<HomeLayout>
 
@@ -22,10 +29,8 @@ export default function Home() {
 
 
                 <div id="card_trips" class="  basis-3/4	w-full h-auto flex flex-col gap-y-4">
-        <CardSearch />
-        <CardSearch />
-        <CardSearch />
-        <CardSearch />
+  
+        <ListTrips/>
 
                 </div>
               </section>
