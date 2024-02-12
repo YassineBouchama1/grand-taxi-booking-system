@@ -1,9 +1,11 @@
 'use client'
+import { setToken, setUser } from "@/Redux/auth/authSlice";
 import { axiosClient } from "@/services/axios";
 import Image from "next/image";
 
 import { useRouter } from 'next/navigation'
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 
 // import { login } from "@/lib/session";
@@ -12,10 +14,9 @@ const FormLogin = () => {
   
 
     const router = useRouter()
-
+const dispatch =useDispatch()
 
     const [formData, setFormData] = useState({
-
         email: '',
         password: '',
      
@@ -23,6 +24,7 @@ const FormLogin = () => {
     const [errors, setErrors] = useState({});
     const [createdMsg, setCreatedMsg] = useState('');
     const [errorsMsg, setErrorsMsg] = useState([]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,68 +37,50 @@ const FormLogin = () => {
 
     const handleSubmitLogin = async (e) => {
         e.preventDefault();
-        console.log('clicked login')
         setCreatedMsg('')
         setErrorsMsg('')
         const newErrors = {};
-        if (!formData.password?.trim()) {
-            newErrors.password = 'password is required';
-        }
-   
+
         if (!formData.email?.trim()) {
             newErrors.email = 'Email is required';
         }
-
+        if (!formData.password?.trim()) {
+            newErrors.password = 'Password is required';
+        }
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
-     
-
 
         try {
-            // await axiosClient.post('/sanctum/csrf-cookie', formData);
-            // const authResponse =  await axiosClient.post('/auth/login', formData);
-          
-            const response = await fetch("http://127.0.0.1:80/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            })
-        
-            const authResponse = response.json()
-
-      
-            console.log(authResponse);
-            if (authResponse.status === 201) {
-                setCreatedMsg(authResponse.data.message)
+            // await axiosClient.get('/sanctum/csrf-cookie');
+            // dispatch(setUser({ 'name': 'hole' }));
+            const response = await axiosClient.post('/auth/login', formData);
+            console.log(response);
+            if (response.status === 201) {
+                setCreatedMsg(response.data.message)
                 e.target.reset();
-                //save all user info  and token to global state & localstorage
-
-                dispatch(setUser((authResponse.data.data)));
-                localStorage.setItem('token', authResponse.data.data.token)
-          
-             
-                await fetch("api/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(authResponse.data.data),
-                })
-                setTimeout(() => router.refresh(),5000)
             }
+            const token = response.data.data.token
+            const user = response.data.data.user
+            dispatch(setToken(token));
+            dispatch(setUser(user));
 
+            // await fetch("api/login", {
+            //     method: "POST",
+             
+            //     body: JSON.stringify(response.data.data.token),
+            // })
+            // setTimeout(() => router.refresh(), 5000)
+        
 
         } catch (error) {
             console.log(error);
 
-            // Check if error.authResponse exists and has data and errors properties
-            if (error.authResponse && error.authResponse.data && error.authResponse.data.errors) {
-                // Extract error messages from the authResponse
-                const errorMessages = Object.values(error.authResponse.data.errors);
+            // Check if error.response exists and has data and errors properties
+            if (error.response && error.response.data && error.response.data.errors) {
+                // Extract error messages from the response
+                const errorMessages = Object.values(error.response.data.errors);
                 setErrorsMsg(errorMessages);
             } else {
                 // If the error structure is different or unknown, handle it accordingly
@@ -104,6 +88,7 @@ const FormLogin = () => {
             }
         }
     };
+
 
 
 

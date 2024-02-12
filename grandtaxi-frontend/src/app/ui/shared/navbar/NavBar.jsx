@@ -14,7 +14,7 @@ const NavBar = () => {
     const [toggleRegister, setToggleRegister] = useState(false)
     const user = useSelector((state) => state.auth.user)
     const token = useSelector((state) => state.auth.token)
-    console.log(user)
+   
     return <>
         <nav className=" bg-white border-gray-200 py-2 dark:bg-gray-900 shadow-b  shadow-lg">
             <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
@@ -26,7 +26,7 @@ const NavBar = () => {
 
                 </ul>
                 {token && token}
-                {user?user.user.name:
+                {token ? token :
                 (
 
                     <ul className=" flex justify-between gap-4 border border-solid border-gray-500 border-opacity-25 px-1.5 py-1    rounded-md	">
