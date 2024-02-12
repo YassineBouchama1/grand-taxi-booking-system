@@ -1,18 +1,19 @@
 'use client'
 
 import { axiosClient } from "@/services/axios";
+import { data } from "autoprefixer";
 import { useEffect, useState } from "react";
 
 const Reservations = () => {
     
-    const [trips, setTrips] = useState([]);
+    const [reserv, setReserv] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
            
             try {
                 const response = await axiosClient.get('/reservations');
-                setTrips(response.data.data);
+                setReserv(response.data.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -20,6 +21,12 @@ const Reservations = () => {
 
         fetchData();
     }, []);
+
+
+const isValidCancleBtn = (date)=>{
+    return (new Date(date).getTime() - new Date().getTime())> 24*60*60*1000
+    
+}
 
   return(
     <div class=" px-4 sm:px-8 py-4 overflow-x-auto">
@@ -43,8 +50,11 @@ const Reservations = () => {
                 </tr>
             </thead>
             <tbody id="container_list">
-                      {trips.map((trip, index) => (
-                          
+                      {reserv.map((item, index) => (
+
+                     
+                           
+
                           <tr>
                       
                               <td class="px-5 py-5 border-b border-gray-200  text-sm">
@@ -52,18 +62,21 @@ const Reservations = () => {
                               </td>
                               <td class="px-5 py-5 border-b border-gray-200  text-sm">
                                   <p class="text-gray-900 dark:text-white whitespace-no-wrap">
-                                     {trip.data}
+                                     {item.data}
                                   </p>
                               </td>
                               <td class="px-5 py-5 border-b border-gray-200  text-sm">
                                   <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                                       <span aria-hidden class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                      <span class="relative">{trip.status}</span>
+                                      <span class="relative">{item.status}</span>
                                   </span>
                               </td>
                               <td class="px-5 py-5 border-b border-gray-200  text-sm">
-                                  <button type="button" class="text-white bg-green-700 hover:bg-green-800   font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                      Save</button>
+                                  {!isValidCancleBtn(item.created_at) && 
+                                      (<button type="button"
+                                          class="text-white bg-red-700 hover:bg-red-800   font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                          cancel</button>)}
+                                 
 
                               </td>
                           </tr>   
