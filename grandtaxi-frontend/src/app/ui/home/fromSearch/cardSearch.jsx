@@ -4,6 +4,7 @@ import { axiosClient } from "@/services/axios";
 import Modal from "../../shared/Modal";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import ThankYouPopup from "../../passenger/ThankYouPopup/thankYouPopup";
 
 const CardSearch = ({trip}) => {
 
@@ -80,7 +81,7 @@ console.log(trip)
             shouldShow={toggle}
             onRequestClose={() => setToggle(false)}
         >
-            gg        </Modal>
+            <ThankYouPopup/>    </Modal>
     </article>;
 };
 export default CardSearch;

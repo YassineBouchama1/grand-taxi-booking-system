@@ -1,20 +1,21 @@
 'use client'
+
 import { setToken, setUser } from "@/Redux/auth/authSlice";
-import { create, createSession } from "@/lib/save";
+import { createSession } from "@/lib/session";
 import { axiosClient } from "@/services/axios";
 import Image from "next/image";
 
-import { useRouter } from 'next/navigation'
+
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 
-// import { login } from "@/lib/session";
+
 
 const FormLogin = () => {
   
 
-    const router = useRouter()
+
 const dispatch =useDispatch()
 
     const [formData, setFormData] = useState({
@@ -65,7 +66,8 @@ const dispatch =useDispatch()
                 const user = response.data.data.user
                 dispatch(setToken(token));
                 dispatch(setUser(user));
-                createSession(token,user)
+
+                createSession(user)
             }
     
 

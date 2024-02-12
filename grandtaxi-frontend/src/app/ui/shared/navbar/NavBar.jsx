@@ -1,7 +1,6 @@
 'use client'
 
 import Image from "next/image";
-import Link from "next/link";
 import { FaArrowRightToBracket } from "react-icons/fa6";
 import Modal from "../Modal";
 import { useState } from "react";
@@ -14,7 +13,7 @@ const NavBar = () => {
     const [toggleRegister, setToggleRegister] = useState(false)
     const user = useSelector((state) => state.auth.user)
     const token = useSelector((state) => state.auth.token)
-   
+  
     return <>
         <nav className=" bg-white border-gray-200 py-2 dark:bg-gray-900 shadow-b  shadow-lg">
             <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
@@ -25,7 +24,7 @@ const NavBar = () => {
                     </li>
 
                 </ul>
-               
+             
                 {user ? user.email :
                 (
 

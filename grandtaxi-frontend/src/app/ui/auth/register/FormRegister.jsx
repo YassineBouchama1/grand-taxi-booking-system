@@ -54,7 +54,7 @@ const FormRegister = () => {
 
         try {
             // await axiosClient.get('/sanctum/csrf-cookie');
-            dispatch(setUser({ 'name': 'hole' }));
+            // dispatch(setUser({ 'name': 'hole' }));
             const response = await axiosClient.post('/auth/register', formData);
             console.log(response);
             if (response.status === 201) {
