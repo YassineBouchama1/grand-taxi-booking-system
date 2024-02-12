@@ -1,10 +1,45 @@
-const CardSearch = () => {
+'use client'
+
+import { axiosClient } from "@/services/axios";
+import Modal from "../../shared/Modal";
+import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
+
+const CardSearch = ({trip}) => {
+
+    const paragraphRef = useRef(null);
+
+console.log(trip)
+    const [toggle, setToggle] = useState(false)
+    const user = useSelector((state) => state.auth.user)
+    const onReservation = async ()=>{
+
+    console.log(user)
+
+    //chekc if useer is passenger
+    if (user?.role_id !== 2)return console.log('u are not allowed')
+
+    const formData = {
+        "trip_id":trip.id
+    }
+
+    const response = await axiosClient.post('/reservations/create', formData)
+    if (response.status === 201) {
+      setToggle(true)
+      //scroll to the top after reserve
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }
+    console.log(response)
+  
+}
+
     return <article id="ticket-wrapper" class="bg-white w-full  h-auto rounded-md p-4 mx-auto ">
 
 
         <div id="ticket-wrapper2" class=" flex  gap-x-2 p-4 flex-col lg:flex-row mx-auto justify-between  lg:h-[80%] items-center " >
             <div class=" ticket-wrapper-info flex-col lg:justify-between justify-center items-center gap-y-6 ">
-                <h3 class="font-bold text-lg  leading-7 text-[#424248]">CTM - Kansas - Echo Bass</h3>
+                <h3 class="font-bold text-lg  leading-7 text-[#424248]">{trip.pick_up_city} - {trip.destination_city}</h3>
                 <img src="assets/ctm.png" class=" w-auto h-28 bg-cover bg-center"></img>
 
             </div>
@@ -12,34 +47,40 @@ const CardSearch = () => {
 
                 <div>
                     <h4 class="font-semibold text-lg  leading-7 text-[#424248]">08:00 AM</h4>
-                    <p>Kansas</p>
+                    <p>{trip.pick_up_city}</p>
                 </div>
 
                 <div class="text-center ">
                     <i class="fa-solid fa-arrow-right-long text-green-700"></i>
-                    <p>08:30 min</p>
+                    <p>seats : {trip.seats}</p>
                 </div>
 
                 <div>
                     <h4 class="font-semibold text-lg  leading-7 text-[#424248]">04:30 PM</h4>
-                    <p>Echo Bass</p>
+                    <p>{trip && trip.destination_city}</p>
                 </div>
 
             </div>
             <div class="ticket-wrapper-price text-center flex flex-col gap-4">
-                <h3 class="text-green-600 text-bold text-2xl">$100.00</h3>
+                <h3 class="text-green-600 text-bold text-2xl">${trip.price}</h3>
 
 
-                <button class="w-full bg-[#0E9E4D] hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg focus:outline-none">Select Seat</button>
+                <button onClick={() => onReservation(trip.id)} class="w-full bg-[#0E9E4D] hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg focus:outline-none">Select Seat</button>
 
             </div>
         </div>
         <hr></hr>
             <div class="flex  gap-x-2 p-4 mx-auto justify-start basis-4/6 items-center">
-                <p class="font-bold text-[#777]">Facilities-</p> <span class="bg-[#f7f7f7] text-[#777] p-1 rounded-sn">Water Bottle</span>
-                <span class="bg-[#f7f7f7] text-[#777] p-1 rounded-md">Pillow</span>
-                <span class="bg-[#f7f7f7] text-[#777] p-1 rounded-md">Wifi</span>
+                <p class="font-bold text-[#777]">Car Type-</p> 
+            <span class="bg-[#f7f7f7] text-[#777] p-1 rounded-md">{trip.car}</span>
+              
             </div>
+
+        <Modal
+            shouldShow={toggle}
+            onRequestClose={() => setToggle(false)}
+        >
+            gg        </Modal>
     </article>;
 };
 export default CardSearch;

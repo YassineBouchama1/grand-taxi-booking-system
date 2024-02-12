@@ -42,11 +42,15 @@ const ListTrips = () => {
     fetchData();
   }, [date, start, end]);
 
+  console.log(trips)
   return (
     <>
       {trips.map((trip, index) => (
-        <CardSearch key={index} trip={trip} />
+        trip.isFull ? null : (
+          <CardSearch key={index} trip={trip} />
+        )
       ))}
+
     </>
   );
 };

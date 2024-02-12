@@ -61,12 +61,12 @@ const dispatch =useDispatch()
             if (response.status === 201) {
                 setCreatedMsg(response.data.message)
                 e.target.reset();
+                const token = response.data.data.token
+                const user = response.data.data.user
+                dispatch(setToken(token));
+                dispatch(setUser(user));
+                createSession(token,user)
             }
-            const token = response.data.data.token
-            const user = response.data.data.user
-            dispatch(setToken(token));
-            dispatch(setUser(user));
-            createSession(token,user)
     
 
         } catch (error) {
