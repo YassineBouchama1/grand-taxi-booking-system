@@ -1,5 +1,5 @@
 'use client'
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import Reservations from "../ui/passenger/Reservations";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -9,9 +9,9 @@ const Page = () => {
     const user = useSelector((state) => state.auth.user)
 const router = useRouter()
     // const session = getSession
-useLayoutEffect(()=>{
+useEffect(()=>{
 
-    if (user?.role_id !== 2) return router.push('/')
+    if (user?.role_id !== 3) return router.push('/')
 
 },[])
   return <>

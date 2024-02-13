@@ -66,8 +66,8 @@ const dispatch =useDispatch()
                 const user = response.data.data.user
                 dispatch(setToken(token));
                 dispatch(setUser(user));
-
-                createSession(user)
+                // createSession(user)
+                
             }
     
 

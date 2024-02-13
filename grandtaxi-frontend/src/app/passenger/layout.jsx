@@ -8,9 +8,11 @@ export default function HomeLayout({ children }) {
     return (
         < >
             <NavBar />
-            {children}
 
             
+            {children}
+
+
         </>
     );
 }

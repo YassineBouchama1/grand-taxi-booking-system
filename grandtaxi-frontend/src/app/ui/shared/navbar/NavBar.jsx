@@ -1,4 +1,5 @@
 'use client'
+import { FiLogOut } from "react-icons/fi";
 
 import Image from "next/image";
 import { FaArrowRightToBracket } from "react-icons/fa6";
@@ -7,6 +8,8 @@ import { useState } from "react";
 import FormLogin from "../../auth/login/FormLogin";
 import FormRegister from "../../auth/register/FormRegister";
 import { useSelector } from "react-redux";
+import Link from "next/link";
+import NavBarHook from "./NavBarHook";
 
 const NavBar = () => {
     const [toggleLogin, setToggleLogin] = useState(false)
@@ -14,6 +17,8 @@ const NavBar = () => {
     const user = useSelector((state) => state.auth.user)
     const token = useSelector((state) => state.auth.token)
   
+   const {onLogOutBtn} = NavBarHook()
+    
     return <>
         <nav className=" bg-white border-gray-200 py-2 dark:bg-gray-900 shadow-b  shadow-lg">
             <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
@@ -25,7 +30,8 @@ const NavBar = () => {
 
                 </ul>
              
-                {user ? user.email :
+                {user ? <div className="flex flex-col justify-center items-center">{user.email} 
+                    <button onClick={() => onLogOutBtn()} className="flex items-center"><FiLogOut /></button> </div>:
                 (
 
                     <ul className=" flex justify-between gap-4 border border-solid border-gray-500 border-opacity-25 px-1.5 py-1    rounded-md	">
@@ -41,7 +47,10 @@ const NavBar = () => {
                             shouldShow={toggleLogin}
                             onRequestClose={() => setToggleLogin(false)}
                             >
-                            <FormLogin />
+                            <FormLogin 
+                                        setToggleLogin={setToggleLogin}
+
+                            />
                         </Modal>
                     </li>
                     /
@@ -62,7 +71,7 @@ const NavBar = () => {
             )}
             </div>
         </nav>
-        <nav className="relative lg:static bg-white border-gray-200 py-2  shadow-b shadow-lg">
+        <nav className="border-b-2 relative lg:static bg-white border-gray-200 py-2  shadow-b shadow-lg">
                 <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
                     <a href="./" className="flex items-center">
 
@@ -73,9 +82,13 @@ const NavBar = () => {
                         <div className="hidden mt-2 mr-4 sm:inline-block">
                             <span></span>
                         </div>
+                    {user && user.role_id && user.role_id !== 1 ? (
+                        <Link href={user.role_id === 2 ? '/passenger' : '/driver'} className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0">
+                            Profile{user.role_id}
+                        </Link>
+                    ) : null}
 
-                        <a href="" className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 ">BUY
-                            TICKETS</a>
+                      
                         <button id="mobile-menu-toggle" type="button" className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 " aria-controls="mobile-menu-2" aria-expanded="true">
 
                             <span className="sr-only">Open main menu</span>

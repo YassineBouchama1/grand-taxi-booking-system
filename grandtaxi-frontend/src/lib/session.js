@@ -26,46 +26,46 @@ export async function decrypt(input){
 
 // save token to local storge
 export async function createSession(user) {
+  // Verify credentials && get the user
+
+
   // Create the session
   const expires = new Date(Date.now() + 10 * 1000);
   const session = await encrypt({ user, expires });
- 
-
-
 
   // Save the session in a cookie
-  cookies().set("session", token, { expires, httpOnly: true });
+  cookies().set("session", session, { expires, httpOnly: true });
 
      return true
 }
 
 
 
-export async function logout() {
-  // Destroy the session
-  cookies().set("session", "", { expires: new Date(0) });
-}
 
 
 export async function getSession() {
-  const session = cookies().get("token")?.value;
+  const session = cookies().get("session")?.value;
   if (!session) return null;
-   return await decrypt(session);
+  return await decrypt(session);
 }
 
-export async function updateSession(request) {
-  const session = request.cookies.get("session")?.value;
-  if (!session) return;
-
-  // Refresh the session so it doesn't expire
-  const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 10 * 1000);
-  const res = NextResponse.next();
-  res.cookies.set({
-    name: "session",
-    value: await encrypt(parsed),
-    httpOnly: true,
-    expires: parsed.expires,
-  });
-  return res;
+export async function logoutCookies() {
+  // Destroy the session
+  cookies().set("session", "", { expires: new Date(0) });
 }
+// export async function updateSession(request) {
+//   const session = request.cookies.get("session")?.value;
+//   if (!session) return;
+
+//   // Refresh the session so it doesn't expire
+//   const parsed = await decrypt(session);
+//   parsed.expires = new Date(Date.now() + 10 * 1000);
+//   const res = NextResponse.next();
+//   res.cookies.set({
+//     name: "session",
+//     value: await encrypt(parsed),
+//     httpOnly: true,
+//     expires: parsed.expires,
+//   });
+//   return res;
+// }

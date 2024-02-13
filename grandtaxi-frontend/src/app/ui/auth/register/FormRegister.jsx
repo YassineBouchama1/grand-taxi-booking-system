@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-const FormRegister = () => {
+const FormRegister = ( setToggleLogin ) => {
 
     const dispatch = useDispatch()
 
@@ -14,7 +14,7 @@ const FormRegister = () => {
         contact_info: '',
         email: '',
         password: '',
-        role_id: 2
+        role_id: ''
     });
     const [errors, setErrors] = useState({});
     const [createdMsg, setCreatedMsg] = useState('');
@@ -34,6 +34,11 @@ const FormRegister = () => {
         e.preventDefault();
         setCreatedMsg('')
         setErrorsMsg('')
+
+
+        console.log(formData)
+
+        
         const newErrors = {};
         if (!formData.name?.trim()) {
             newErrors.name = 'Name is required';
@@ -60,6 +65,7 @@ const FormRegister = () => {
             if (response.status === 201) {
                 setCreatedMsg(response.data.message)
                 e.target.reset(); 
+                setToggleLogin(false)
             }
          
 
@@ -99,6 +105,42 @@ const FormRegister = () => {
 
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                 <input type="hidden" name="remember" value="true"></input>
+               
+                <label>
+                    <div className="flex items-center mb-4">
+                        <input
+                           
+                            type="radio"
+                            value="2"
+                            name="role_id"
+                            onChange={handleChange} 
+                            defaultChecked
+                            className="w-4 h-4 text-blue-600  focus:ring-blue-500 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
+                        ></input>
+                        <label
+                            htmlFor="Passenger"
+                            className="ms-2 text-sm font-medium text-gray-300 "
+                        >
+                            Passenger
+                        </label>
+                    </div>
+                    <div className="flex items-center">
+                        <input
+                       
+                            type="radio"
+                            value="3"
+                            name="role_id"
+                            onChange={handleChange} 
+                            className="w-4 h-4 text-blue-600  focus:ring-blue-500 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
+                        ></input>
+                        <label
+                            htmlFor="driver"
+                            className="ms-2 text-sm font-medium text-gray-300"
+                        >
+                            driver
+                        </label>
+                        </div>
+                </label>
                 <div className="flex gap-x-2">
                     <div className="relative">
 
