@@ -5,6 +5,7 @@ import Modal from "../../shared/Modal";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ThankYouPopup from "../../passenger/ThankYouPopup/thankYouPopup";
+import notify from "@/hooks/useNotifaction";
 
 const CardSearch = ({trip}) => {
 
@@ -18,7 +19,10 @@ console.log(trip)
     console.log(user)
 
     //chekc if useer is passenger
-    if (user?.role_id !== 2)return console.log('u are not allowed')
+    if (user?.role_id !== 2){
+        return notify("You Are Not Allow To Resserve .", "warn");
+
+    }
 
     const formData = {
         "trip_id":trip.id

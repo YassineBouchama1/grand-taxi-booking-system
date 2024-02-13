@@ -1,17 +1,19 @@
 'use client'
 import { setUser } from "@/Redux/auth/authSlice";
 import DriverApi from "@/services/DriverApi";
+import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-const AlertActive = (setToggleLogin) => {
+const AlertActive = () => {
 
     const dispatch = useDispatch()
-
+const router = useRouter()
     const [formData, setFormData] = useState({
         description: '',
         license_plate_number: '',
         vehicle_type: '',
+        payment_type: '',
     });
     const [errors, setErrors] = useState({});
     const [createdMsg, setCreatedMsg] = useState('');
@@ -46,9 +48,7 @@ const AlertActive = (setToggleLogin) => {
         if (!formData.vehicle_type?.trim()) {
             newErrors.vehicle_type = 'vehicle_type is required';
         }
-        // if (!formData.payment_type) {
-        //     newErrors.payment_type = 'payment_type is required';
-        // }
+    
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
@@ -61,7 +61,12 @@ const AlertActive = (setToggleLogin) => {
             console.log(response);
             if (response.status === 201) {
                 setCreatedMsg(response.data.message)
-              
+
+                //update user data in localstorage 
+                dispatch(setUser(response.data.user))
+
+                router.push('/driver')
+                
             }
 
 
