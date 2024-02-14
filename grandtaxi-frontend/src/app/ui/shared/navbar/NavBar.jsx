@@ -30,7 +30,7 @@ const NavBar = () => {
 
                 </ul>
              
-                {user ? <div className="flex flex-col justify-center items-center">{user.email} 
+                {user ? <div className="flex flex-col justify-center items-center">{user.name} 
                     <button onClick={() => onLogOutBtn()} className="flex items-center"><FiLogOut /></button> </div>:
                 (
 

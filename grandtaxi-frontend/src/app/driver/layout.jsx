@@ -9,15 +9,18 @@ import Image from "next/image";
 import BarButtons from "../ui/driver/BarButtons";
 import DriverApi from "@/services/DriverApi";
 import Loader from "../ui/shared/Loader";
+import EditDriver from "../ui/driver/editDriver";
+import Modal from "../ui/shared/Modal";
 
 export default function HomeLayout({ children }) {
-    // const user = useSelector((state) => state.auth.user);
+    const userStatus = useSelector((state) => state.auth.user);
     const route = useRouter();
     const [user, setUser] = useState(null)
-    const [toggleLoader, setToggleLoader] = useState(null)
-    // useEffect(() => {
-    //     if (user && user.role_id !== 3) return route.push('/');
-    // }, []);
+    const [toggleLoader, setToggleLoader] = useState(true)
+
+    useEffect(() => {
+        if (!userStatus && userStatus?.role_id !== 3) return route.push('/');
+    }, []);
     // console.log(user.driver)
 
 
@@ -40,12 +43,12 @@ export default function HomeLayout({ children }) {
 
         fetchData();
         console.log(user)
-    }, []);
+    }, [userStatus]);
     return (
         <>
-            <NavBar />
+            <NavBar user={user}/>
             {toggleLoader && <Loader />}
-            {user && user.status === 'inactive' ? (
+            {userStatus && userStatus.status === 'inactive' ? (
                 <div className="bg-white w-full h-full flex items-center">
                     <AlertActive />
                 </div>
@@ -55,11 +58,15 @@ export default function HomeLayout({ children }) {
                             <h3 className="min-h-20 border-b-2 text-4xl flex items-center font-extrabold text-green-600 md:pl-6">My Prfile</h3>
 
 
-                            <div className="flex justify-start items-center px-4 gap-x-4  py-4 ">
-                                <Image src="/assets/avatar-icon.webp"className="h-20 w-20 rounded-full border-green-500 border-4" width='20' height='20' alt="avatar"/>
+                            <div className=" flex justify-center items-center px-4 gap-x-4  py-4 ">
 
-                                <div className="flex justify-start items-center  gap-x-4  ">
-
+                                <div className="flex justify-start items-center  gap-x-4   ">
+                                    {!(user ) ? null : (
+                                    <div>
+                                            <Image class="w-10 h-10  border-green-500 border-2" src={user.contact_info ? `${user.contact_info}` : '/assets/avatar.jpg'}  alt="Rounded avatar" width='40' height='40' />
+                                    </div>
+                                    )}
+                                    <span className="w-[1px] min-h-[40px] bg-black text-black"></span>
 
                                     {!(user && user.driver) ? null : (
 
@@ -68,7 +75,6 @@ export default function HomeLayout({ children }) {
                                             <p>{user.driver.description}</p>
                                         </div>
                                     )}
-                                    <span className="w-[1px] min-h-[40px] bg-black text-black"></span>
 
                                     <div>
                                         <p className="font-black">Email</p>
@@ -91,10 +97,15 @@ export default function HomeLayout({ children }) {
                                         </div>
                                     )}
 
+
                                 </div>
+
+
+                            
                             </div>
 
                             <BarButtons/>
+                           
                         </section>
                         {children}
                  </>

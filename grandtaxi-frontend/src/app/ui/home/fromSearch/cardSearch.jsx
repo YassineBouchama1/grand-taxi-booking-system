@@ -48,25 +48,19 @@ console.log(trip)
         <div id="ticket-wrapper2" class=" flex  gap-x-2 p-4 flex-col lg:flex-row mx-auto justify-between  lg:h-[80%] items-center " >
             <div class=" ticket-wrapper-info flex-col lg:justify-between justify-center items-center gap-y-6 ">
                 <h3 class="font-bold text-lg  leading-7 text-[#424248]">{trip.pick_up_city} - {trip.destination_city}</h3>
-                <img src="assets/ctm.png" class=" w-auto h-28 bg-cover bg-center"></img>
+                <h4 class="font-semibold text-lg  leading-7 text-[#424248]">{new Date(trip.pickup_datetime).toLocaleDateString('en-US')}</h4>
 
             </div>
             <div class="ticket-wrapper-cities flex justify-between gap-x-4  items-center">
 
-                <div>
-                    <h4 class="font-semibold text-lg  leading-7 text-[#424248]">08:00 AM</h4>
-                    <p>{trip.pick_up_city}</p>
-                </div>
+           
 
                 <div class="text-center ">
                     <i class="fa-solid fa-arrow-right-long text-green-700"></i>
                     <p>seats : {trip.seats}</p>
                 </div>
 
-                <div>
-                    <h4 class="font-semibold text-lg  leading-7 text-[#424248]">04:30 PM</h4>
-                    <p>{trip && trip.destination_city}</p>
-                </div>
+           
 
             </div>
             <div class="ticket-wrapper-price text-center flex flex-col gap-4">

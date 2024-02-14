@@ -18,10 +18,10 @@ useEffect(()=>{
   return <>
 
   <div className="bg-white h-screen border-t-2">
-          <Suspense fallback={<p>Loading</p>}>
+      
 
 <TripTable/>
-          </Suspense>
+     
     
   </div>;
   </>

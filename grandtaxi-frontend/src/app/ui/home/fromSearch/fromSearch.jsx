@@ -29,24 +29,10 @@ const router = useRouter()
 
         dispatch(setQuery({ date, start, end }));
         router.push('/search')
-
+        console.log('clciked ')
     }
 
-    // //access client state
-    // const queryClient = useQueryClient();
 
-    // // this mutation for change status user
-    // const { mutateAsync, isError, data, isPending } = useMutation({
-    //     mutationFn: async () =>
-    //         dispatch(setDate('2024-05-10')),
-    //     onSuccess: async () => {
-    //         console.log("Deleted succssfully");
-    //         queryClient.invalidateQueries({ queryKey: ["trips"] });
-    //     },
-    // });
-    // if (isPending){
-    //    return <h1>loding</h1>
-    // }
 
     return <form class="bg-white rounded-lg  p-6 w-full">
         <div class="grid grid-cols-2 gap-6">

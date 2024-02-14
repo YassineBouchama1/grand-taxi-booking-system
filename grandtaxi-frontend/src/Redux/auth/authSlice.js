@@ -1,4 +1,5 @@
 
+import { createSession } from "@/lib/session";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -27,6 +28,13 @@ export const AuthSlice = createSlice({
       state.user = action.payload;
       // Save user to localStorage
       localStorage.setItem('user', JSON.stringify(action.payload));
+      // createSession(action.payload)
+    },
+          setDriver: (state, action) => {
+      state.user = action.payload;
+      // Save user to localStorage
+      localStorage.setItem('driver', JSON.stringify(action.payload));
+      // createSession(action.payload)
     },
   },
 

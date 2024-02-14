@@ -90,7 +90,7 @@ const router = useRouter()
             if (response.status === 201) {
                 setCreatedMsg(response.data.message)
                 notify(response.data.message,'success')
-             
+           
                 router.push('/driver')
                 setFormData({
                     duration_minutes: '',
