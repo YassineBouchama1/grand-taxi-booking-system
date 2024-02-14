@@ -6,11 +6,13 @@ import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ThankYouPopup from "../../passenger/ThankYouPopup/thankYouPopup";
 import notify from "@/hooks/useNotifaction";
+import { redirect, useRouter } from "next/navigation";
+
 
 const CardSearch = ({trip}) => {
 
     const paragraphRef = useRef(null);
-
+const router = useRouter()
 console.log(trip)
     const [toggle, setToggle] = useState(false)
     const user = useSelector((state) => state.auth.user)
@@ -33,6 +35,7 @@ console.log(trip)
       setToggle(true)
       //scroll to the top after reserve
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        router.push('/passenger')
 
     }
     console.log(response)

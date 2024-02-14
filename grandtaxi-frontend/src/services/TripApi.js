@@ -12,6 +12,9 @@ const TripApi = {
     delete: async (id) => {
     return await axiosClient.delete(`/trips/destroy/${id}`)
   },
+  historiesTrips: async () => {
+    return await axiosClient.get('/trips/history')
+  },
   all: async () => {
     return await axiosClient.get('/trips/my')
   },

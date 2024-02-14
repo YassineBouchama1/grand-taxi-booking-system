@@ -73,15 +73,15 @@ const router = useRouter()
         if (!formData.seats.trim()) {
             newErrors.seats = "Seats is required";
         }
-        if (formData.pick_up_city_id === formData.destination_city_id) {
-            notify("You can't travel to the same city", "warn");
-            return
-        }
+    
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
-
+        if (formData.pick_up_city_id === formData.destination_city_id) {
+            notify("You can't travel to the same city", "warn");
+            return
+        }
         try {
             // await axiosClient.get('/sanctum/csrf-cookie');
             // dispatch(setUser({ 'name': 'hole' }));
@@ -89,7 +89,7 @@ const router = useRouter()
             console.log(response);
             if (response.status === 201) {
                 setCreatedMsg(response.data.message)
-                notify('response.data.message','success')
+                notify(response.data.message,'success')
              
                 router.push('/driver')
                 setFormData({
@@ -107,6 +107,11 @@ const router = useRouter()
             console.log(error);
 
 
+            if (error.response.status === 403){
+                notify(error.response.data.message, 'warn')
+                return
+            }
+
             // Check if error.response exists and has data and errors properties
             if (error.response && error.response.data && error.response.data.errors) {
                 // Extract error messages from the response
@@ -122,7 +127,7 @@ const router = useRouter()
     //get today date  for input date
     const today = new Date().toISOString().split('T')[0];
 
-    return <div class="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+    return <div class="h-full bg- p-6 bg-gray-100 flex items-center justify-center">
         <div class="container max-w-screen-lg mx-auto">
             <div>
                 {createdMsg && <p className="text-green-500">{createdMsg}</p>}
@@ -215,9 +220,7 @@ const router = useRouter()
                 </div>
             </div>
 
-            <a href="https://www.buymeacoffee.com/dgauderman" target="_blank" class="md:absolute bottom-0 right-0 p-4 float-right">
-                <img src="https://www.buymeacoffee.com/assets/img/guidelines/logo-mark-3.svg" alt="Buy Me A Coffee" class="transition-all rounded-full w-14 -rotate-45 hover:shadow-sm shadow-lg ring hover:ring-4 ring-white"></img>
-            </a>
+          
         </div>
     </div>;
 };

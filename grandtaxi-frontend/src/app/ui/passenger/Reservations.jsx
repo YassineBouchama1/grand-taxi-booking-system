@@ -12,23 +12,26 @@ const Reservations = () => {
         try {
             const response = await ReservationsApi.delete(id)
             console.log(response)
+            fetchData()
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
+    const fetchData = async () => {
+
+        try {
+            const response = await axiosClient.get('/reservations');
+            setReserv(response.data.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+
     useEffect(() => {
-        const fetchData = async () => {
-           
-            try {
-                const response = await axiosClient.get('/reservations');
-                setReserv(response.data.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
 
         fetchData();
-    }, [cancelReservation]);
+    }, []);
 
 
     // check if the time of reservation more than 24h
@@ -81,9 +84,9 @@ return 'bg-blue-500'
                       {reserv.map((item, index) => (
 
                      
-                           
+                        //    if(item.status != 'canceld' )return null;
 
-                          <tr>
+                          <tr key={index}>
                       
                               <td class="px-5 py-5 border-b border-gray-200  text-sm">
                                   <p class="text-gray-900 dark:text-white whitespace-no-wrap"> {item.Pick_up_city} - {item.destination_city}</p>
@@ -100,10 +103,20 @@ return 'bg-blue-500'
                                   </span>
                               </td>
                               <td class="px-5 py-5 border-b border-gray-200  text-sm">
-                                  {!(isValidCancleBtn(item.created_at) && item.statusTrip != 'complte') && 
-                                      (<button onClick={() => cancelReservation(item.id)} type="button"
-                                          class="text-white bg-red-700 hover:bg-red-800   font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                          cancel</button>)}
+                                  {!isValidCancleBtn(item.created_at) && !(item.status === 'completed' || item.status === 'canceled') && (
+                                      <button onClick={() => cancelReservation(item.id)} type="button"
+                                          className="text-white bg-red-700 hover:bg-red-800 font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                          cancel
+                                      </button>
+                                  )}
+
+                                  {item.status === 'completed'  && (
+                                      <button onClick={() => cancelReservation(item.id)} type="button"
+                                          className="text-white bg-yellow-700 hover:bg-yellow-800 font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                          Review
+                                      </button>
+                                  )}
+
                                  
 
                               </td>

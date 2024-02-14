@@ -18,6 +18,7 @@ const TripTable = () => {
         try {
             const response = await TripApi.delete(id)
             console.log(response)
+            fetchData();
         } catch (error) {
             console.log( error);
         }
@@ -29,26 +30,27 @@ const TripTable = () => {
 
             const response = await TripApi.updateStatis({ status },id)
             console.log(response)
+            fetchData();
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
-    
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = async () => {
 
-            try {
-                const response = await TripApi.all()
-                setTrips(response.data.data);
-                setToggleLoader(false)
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setToggleLoader(false)
-            }
-        };
+        try {
+            const response = await TripApi.all()
+            setTrips(response.data.data);
+            setToggleLoader(false)
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setToggleLoader(false)
+        }
+    };
+    useEffect(() => {
+ console.count('request')
 
         fetchData();
-    }, [cancelReservation]);
+    }, []);
 
 
 

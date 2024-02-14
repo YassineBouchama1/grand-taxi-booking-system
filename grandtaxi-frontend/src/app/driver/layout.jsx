@@ -3,21 +3,48 @@ import { getSession } from "@/lib/session";
 import NavBar from "../ui/shared/navbar/NavBar";
 import { useSelector } from "react-redux";
 import AlertActive from "../ui/driver/AlertActive/AlertActive";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import BarButtons from "../ui/driver/BarButtons";
+import DriverApi from "@/services/DriverApi";
+import Loader from "../ui/shared/Loader";
 
 export default function HomeLayout({ children }) {
-    const user = useSelector((state) => state.auth.user);
+    // const user = useSelector((state) => state.auth.user);
     const route = useRouter();
+    const [user, setUser] = useState(null)
+    const [toggleLoader, setToggleLoader] = useState(null)
+    // useEffect(() => {
+    //     if (user && user.role_id !== 3) return route.push('/');
+    // }, []);
+    // console.log(user.driver)
 
+
+
+
+    const fetchData = async () => {
+
+        try {
+            const response = await DriverApi.show()
+            setUser(response.data.user);
+            
+     console.log(response.data.user)
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setToggleLoader(false)
+        }
+    };
     useEffect(() => {
-        if (user && user.role_id !== 3) return route.push('/');
-    }, []);
 
+
+        fetchData();
+        console.log(user)
+    }, []);
     return (
         <>
             <NavBar />
+            {toggleLoader && <Loader />}
             {user && user.status === 'inactive' ? (
                 <div className="bg-white w-full h-full flex items-center">
                     <AlertActive />
@@ -66,6 +93,8 @@ export default function HomeLayout({ children }) {
 
                                 </div>
                             </div>
+
+                            <BarButtons/>
                         </section>
                         {children}
                  </>

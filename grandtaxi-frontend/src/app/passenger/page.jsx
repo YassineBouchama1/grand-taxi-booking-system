@@ -2,7 +2,7 @@
 import { useLayoutEffect } from "react";
 import Reservations from "../ui/passenger/Reservations";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { getSession } from "@/lib/sessionClient";
 
 const Page = () => {
@@ -11,7 +11,7 @@ const router = useRouter()
     // const session = getSession
 useLayoutEffect(()=>{
 
-    if (user?.role_id !== 2) return router.push('/')
+    if (user?.role_id !== 2) return redirect('/')
 
 },[])
   return <>

@@ -14,8 +14,11 @@ const  router = useRouter()
 const onLogOutBtn = ()=>{
 logout()
 // console.log(logoutCookies())
+localStorage.clear()
 dispatch(setUser(null))
 dispatch(setToken(null))
+localStorage.clear()
+
 router.push('/')
 }
 
