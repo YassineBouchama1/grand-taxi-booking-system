@@ -13,7 +13,8 @@ const ListTrips = () => {
   const start = useSelector((state) => state.trip.start);
   const end = useSelector((state) => state.trip.end);
   const typeCar = useSelector((state) => state.trip.typeCar);
-
+  const car = 'BMW'
+  const rating = 5 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +47,7 @@ const ListTrips = () => {
   return (
     <>
       {trips.map((trip, index) => (
-        trip.isFull ? null : (
+        (trip.isFull && trip.car != car ) ? null : (
           <CardSearch key={index} trip={trip} />
         )
       ))}

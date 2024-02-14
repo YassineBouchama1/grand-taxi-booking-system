@@ -3,12 +3,14 @@
 import { setUser } from "@/Redux/auth/authSlice";
 import notify from "@/hooks/useNotifaction";
 import DriverApi from "@/services/DriverApi";
+import Image from "next/image";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 const DriverEditForm = ({ setToggleEdit }) => {
 
 const dispatch = useDispatch()
+    const [image, setImage] = useState(null);
 
     const [formData, setFormData] = useState({
         description: null,
@@ -31,11 +33,12 @@ const dispatch = useDispatch()
     const handleSubmit = async (e) => {
         e.preventDefault();
   
+        const formDataBackend = new FormData();
+        if (image) formDataBackend.append('profile_photo', image);
 
-
-       
-
-
+    
+        if (formData.description) formDataBackend.append('description', formData.description);
+        console.log(formData)
 
         try {
          
@@ -58,12 +61,15 @@ const dispatch = useDispatch()
             
 <h2 className="text-center">Update Profile</h2>
 
-
+     
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                 <input type="hidden" name="remember" value="true"></input>
 
-
-                <div className="flex gap-x-2">
+                <div className="flex justify-start gap-x-4">
+                    <Image class="w-10 h-10  border-green-500 border-2" src={'/assets/avatar.jpg'} alt="Rounded avatar" width='40' height='40' />
+                    <input type="file" name="profile_photo" onChange={(e) => setImage(e.target.files[0])}></input>
+                </div>
+                <div className="flex     gap-x-2">
                     <div className="relative">
 
                         <label className="ml-3 text-sm font-bold text-gray-700 tracking-wide">name</label>

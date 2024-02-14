@@ -9,8 +9,7 @@ import Image from "next/image";
 import BarButtons from "../ui/driver/BarButtons";
 import DriverApi from "@/services/DriverApi";
 import Loader from "../ui/shared/Loader";
-import EditDriver from "../ui/driver/editDriver";
-import Modal from "../ui/shared/Modal";
+
 
 export default function HomeLayout({ children }) {
     const userStatus = useSelector((state) => state.auth.user);
