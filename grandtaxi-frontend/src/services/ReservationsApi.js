@@ -12,5 +12,10 @@ const ReservationsApi = {
     update: async (payload,id) => {
     return await axiosClient.put(`/reservations/create${id}`, payload)
   },
+  review: async (payload,id) => {
+    console.log(payload)
+    console.log(id)
+    return await axiosClient.put(`/reservations/addReview/${id}`, payload)
+  },
 }
 export default ReservationsApi

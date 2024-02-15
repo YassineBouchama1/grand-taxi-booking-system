@@ -5,9 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-const FormRegister = ( setToggleLogin ) => {
 
-    const dispatch = useDispatch()
+const FormRegister = ({ setToggleLogin }) => { // Added curly braces around setToggleLogin
+
+    const dispatch = useDispatch();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -16,10 +17,11 @@ const FormRegister = ( setToggleLogin ) => {
         password: '',
         role_id: ''
     });
+
     const [errors, setErrors] = useState({});
     const [createdMsg, setCreatedMsg] = useState('');
     const [errorsMsg, setErrorsMsg] = useState([]);
-
+    const [image, setImage] = useState(null); // Added state for image
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -29,16 +31,11 @@ const FormRegister = ( setToggleLogin ) => {
         }));
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setCreatedMsg('')
-        setErrorsMsg('')
+        setCreatedMsg('');
+        setErrorsMsg('');
 
-
-        console.log(formData)
-
-        
         const newErrors = {};
         if (!formData.name?.trim()) {
             newErrors.name = 'Name is required';
@@ -58,54 +55,53 @@ const FormRegister = ( setToggleLogin ) => {
         }
 
         try {
-            // await axiosClient.get('/sanctum/csrf-cookie');
-            // dispatch(setUser({ 'name': 'hole' }));
-            const response = await axiosClient.post('/auth/register', formData);
-            console.log(response);
+            const formDataWithImage = new FormData();
+            formDataWithImage.append('profile_photo', image); // Append image to form data
+
+            // Append other form data fields
+            Object.entries(formData).forEach(([key, value]) => {
+                formDataWithImage.append(key, value);
+            });
+
+            const response = await axiosClient.post('/auth/register', formDataWithImage);
             if (response.status === 201) {
-                setCreatedMsg(response.data.message)
-                e.target.reset(); 
-                setToggleLogin(false)
+                setCreatedMsg(response.data.message);
+                e.target.reset();
+                setToggleLogin(false);
             }
-         
-
         } catch (error) {
-            console.log(error);
-
-            // Check if error.response exists and has data and errors properties
             if (error.response && error.response.data && error.response.data.errors) {
-                // Extract error messages from the response
                 const errorMessages = Object.values(error.response.data.errors);
                 setErrorsMsg(errorMessages);
             } else {
-                // If the error structure is different or unknown, handle it accordingly
                 setErrorsMsg(['An unexpected error occurred.']);
             }
         }
     };
 
+    return (
+        <div className="md:flex md:items-center md:justify-center sm:w-auto md:h-full p-8 rounded-lg bg-white">
+            <div className="max-w-md w-full space-y-8">
+                <div className="text-center flex flex-col justify-center items-center">
+                    <Image className="w-20 h-auto" src="/assets/logo.png" alt="travel smart" width={200} height={200} />
+                    <h2 className="mt-6 text-3xl font-bold text-gray-900">
+                        Welcome to TravelSmart!
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-500">Sign in to your Account</p>
+                </div>
 
+                {createdMsg && <p className="text-green-500">{createdMsg}</p>}
 
-    return <div className=" md:flex md:items-center md:justify-center sm:w-auto md:h-full    p-8   rounded-lg  bg-white ">
-        <div className="max-w-md w-full space-y-8">
-            <div className="text-center flex flex-col justify-center items-center">
-
-                <Image className="w-20 h-auto " src="/assets/logo.png" alt="traveklsmart" width='200' height='200' />
-                <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                    Welcome to TravelSmart!
-                </h2>
-                <p className="mt-2 text-sm text-gray-500">Sign in your Account</p>
-            </div>
-
-            {createdMsg && <p className="text-green-500">{createdMsg}</p>}
-
-            {errorsMsg &&
-                errorsMsg.map((error, index) => <p key={index} className="text-red-500">{error[0]}</p>)
-            }
+                {errorsMsg &&
+                    errorsMsg.map((error, index) => <p key={index} className="text-red-500">{error}</p>)
+                }
 
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                 <input type="hidden" name="remember" value="true"></input>
-               
+                    <div className="flex justify-center gap-x-4">
+                        <Image className="w-10 h-10 border-green-500 border-2" src={'/assets/avatar.jpg'} alt="Rounded avatar" width={40} height={40} />
+                        <input type="file" name="profile_photo" onChange={(e) => setImage(e.target.files[0])} />
+                    </div>
                 <label>
                     <div className="flex items-center mb-4">
                         <input
@@ -189,5 +185,6 @@ const FormRegister = ( setToggleLogin ) => {
             </form>
         </div>
     </div>
+    )
 };
 export default FormRegister;

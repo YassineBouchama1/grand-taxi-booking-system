@@ -62,7 +62,7 @@ export default function HomeLayout({ children }) {
                                 <div className="flex justify-start items-center  gap-x-4   ">
                                     {!(user ) ? null : (
                                     <div>
-                                            <Image class="w-10 h-10  border-green-500 border-2" src={user.contact_info ? `${user.contact_info}` : '/assets/avatar.jpg'}  alt="Rounded avatar" width='40' height='40' />
+                                            <Image class="w-10 h-10  border-green-500 border-2" src={user.profile_photo ? `http://127.0.0.1/${user.profile_photo}` : '/assets/avatar.jpg'}  alt="Rounded avatar" width='40' height='40' />
                                     </div>
                                     )}
                                     <span className="w-[1px] min-h-[40px] bg-black text-black"></span>
@@ -96,6 +96,13 @@ export default function HomeLayout({ children }) {
                                         </div>
                                     )}
 
+                                    {!(user && user.driver) ? null : (
+
+                                        <div>
+                                            <p className="font-black">Raiting</p>
+                                            <p>{user.driver.rating}</p>
+                                        </div>
+                                    )}
 
                                 </div>
 

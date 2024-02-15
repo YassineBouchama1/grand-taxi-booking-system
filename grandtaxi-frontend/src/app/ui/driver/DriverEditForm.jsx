@@ -33,16 +33,19 @@ const dispatch = useDispatch()
     const handleSubmit = async (e) => {
         e.preventDefault();
   
-        const formDataBackend = new FormData();
-        if (image) formDataBackend.append('profile_photo', image);
+        const formDataWithImage = new FormData();
+        if (image){
 
-    
-        if (formData.description) formDataBackend.append('description', formData.description);
-        console.log(formData)
+            formDataWithImage.append('profile_photo', image); // Append image to form data
+        }
 
+        // Append other form data fields
+        Object.entries(formData).forEach(([key, value]) => {
+            formDataWithImage.append(key, value);
+        });
         try {
          
-            const response = await DriverApi.update(formData)
+            const response = await DriverApi.update(formDataWithImage)
             console.log(response);
             if (response.status === 201) {
            notify('profile updated','success')
@@ -65,10 +68,7 @@ const dispatch = useDispatch()
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                 <input type="hidden" name="remember" value="true"></input>
 
-                <div className="flex justify-start gap-x-4">
-                    <Image class="w-10 h-10  border-green-500 border-2" src={'/assets/avatar.jpg'} alt="Rounded avatar" width='40' height='40' />
-                    <input type="file" name="profile_photo" onChange={(e) => setImage(e.target.files[0])}></input>
-                </div>
+                <input type="file" name="profile_photo" onChange={(e) => setImage(e.target.files[0])} />
                 <div className="flex     gap-x-2">
                     <div className="relative">
 

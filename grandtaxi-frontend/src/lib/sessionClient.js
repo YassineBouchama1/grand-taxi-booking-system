@@ -39,6 +39,7 @@ export async function getSessionClient() {
 
 export async function logout() {
 localStorage.removeItem('token')
+localStorage.removeItem('user')
 
 }
 

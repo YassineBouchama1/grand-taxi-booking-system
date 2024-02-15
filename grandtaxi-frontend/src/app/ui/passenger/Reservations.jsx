@@ -4,15 +4,40 @@ import ReservationsApi from "@/services/ReservationsApi";
 import { axiosClient } from "@/services/axios";
 import { data } from "autoprefixer";
 import { useEffect, useState } from "react";
+import Rating from "./Raiting/Rating";
+import Modal from "../shared/Modal";
+import notify from "@/hooks/useNotifaction";
+
 
 const Reservations = () => {
     
     const [reserv, setReserv] = useState([]);
+    const [rating, setRating] = useState(null);
+    const [idReservation, setIdReservation] = useState(null);
+    const [toggle, setToggle] = useState(false);
     const cancelReservation = async (id) => {
         try {
             const response = await ReservationsApi.delete(id)
             console.log(response)
             fetchData()
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+
+    const reviewDriver = async () => {
+        // console.log(rating)
+        const ratingObjec ={
+            'rating': rating 
+        }
+
+        if (!rating)return notify('select number first','warn')
+        try {
+            const response = await ReservationsApi.review(ratingObjec, idReservation)
+            console.log(response)
+            fetchData()
+            setToggle(false)
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -41,7 +66,13 @@ const isValidCancleBtn = (date)=>{
 }
 
 
+// function t get id
+const getIdReservation = (id)=>{
+setIdReservation(id)
+    setToggle(!toggle)
+}
 
+console.log(rating)
 
 const statusColor = (status)=>{
 switch (status) {
@@ -110,21 +141,33 @@ return 'bg-blue-500'
                                       </button>
                                   )}
 
-                                  {item.status === 'completed'  && (
-                                      <button onClick={() => cancelReservation(item.id)} type="button"
+                                  {(!item.isReviewed && item.status === 'completed') && (
+                                      <button onClick={() => getIdReservation(item.id)} type="button"
                                           className="text-white bg-yellow-700 hover:bg-yellow-800 font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                           Review
                                       </button>
                                   )}
+                                  {console.log(item.isReviewed)}
+                                  {/* {!item.isReviewed && (
+                                      <button onClick={() => getIdReservation(item.id)} type="button"
+                                          className="text-white bg-yellow-700 hover:bg-yellow-800 font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                          Review
+                                      </button>
+                                  )} */}
 
-                                 
+                                  <Modal
+                                      shouldShow={toggle}
+                                      onRequestClose={() => setToggle(false)}
+                                  >
+
+                                      <Rating setRating={setRating} reviewDriver={reviewDriver} id={item.id} />
+                                  </Modal>
 
                               </td>
                           </tr>   
                           
                       ))}
 
-                
 
             </tbody>
         </table>

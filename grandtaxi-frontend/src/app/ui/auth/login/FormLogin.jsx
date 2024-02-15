@@ -74,6 +74,10 @@ const dispatch =useDispatch()
         } catch (error) {
             console.log(error);
 
+
+            if (error.response.status === 401){
+                setErrorsMsg(error.response.data.message);
+            }
             // Check if error.response exists and has data and errors properties
             if (error.response && error.response.data && error.response.data.errors) {
                 // Extract error messages from the response
