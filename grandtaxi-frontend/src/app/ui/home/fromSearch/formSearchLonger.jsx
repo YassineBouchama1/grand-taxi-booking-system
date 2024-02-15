@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 const FormSearchLonger =  ({setDate}) => {
 
+    const startRedux = useSelector((state) => state.trip.start);
+    const endRedux = useSelector((state) => state.trip.end);
     const [cities, setCities] = useState([])
     // const [date, setDate] = useState(null)
-    const [start, setStart] = useState(null)
-    const [end, setEnd] = useState(null)
-
+    const [start, setStart] = useState(startRedux)
+    const [end, setEnd] = useState(endRedux)
 const dispatch = useDispatch()
     useLayoutEffect(()=>{
 const fetchCities =async ()=>{
@@ -34,7 +35,7 @@ if (!date) return notify('select date first', 'warn')
     return <form className="bg-white rounded-lg  p-6 w-full">
         <div className="grid grid-cols-2 gap-6">
             <div className="col-span-2 sm:col-span-1 ">
-                <select onChange={(e) => setStart(e.target.value)} id="departure" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500 ">
+                <select value={start} onChange={(e) => setStart(e.target.value)} id="departure" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500 ">
                     <option className="text-gray-400" value="" disabled selected>Pick departure</option>
                     {cities?.data?.map((city, index) => (
                         <option key={index}   value={city.id}  selected>{city.name}</option>
@@ -43,7 +44,7 @@ if (!date) return notify('select date first', 'warn')
                 </select>
             </div>
             <div className="col-span-2 sm:col-span-1 ">
-                <select onChange={(e) => setEnd(e.target.value)} id="destination" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
+                <select value={end} onChange={(e) => setEnd(e.target.value)} id="destination" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
                     <option className="text-gray-400 " value="" disabled selected>Pick destination</option>
                     {cities?.data?.map((city, index) => (
                         <option key={index}  value={city.id} selected>{city.name}</option>

@@ -4,14 +4,18 @@
 import { useEffect, useState } from "react";
 
 import FavoriteApi from "@/services/FavoriteApi";
+import { useDispatch } from "react-redux";
+import { setQuery } from "@/Redux/trip/tripSlice";
+import { useRouter } from "next/navigation";
+
 
 
 const Favorite = () => {
-    
+   const dispatch = useDispatch()
     const [favorites, setFavorites] = useState([]);
 
 
-
+const router = useRouter()
     const handleDelete = async (favoriteId) => {
         try {
             await FavoriteApi.delete(favoriteId);
@@ -35,6 +39,21 @@ const Favorite = () => {
         fetchFavorites();
     }, []);
 
+
+
+    const searchWithit = async (searchWord) => {
+        dispatch(setQuery(searchWord));
+
+        let url = `/search?tripo=null`;
+        if (searchWord.start) {
+            url += `&${searchWord.start}`;
+        }
+        if (searchWord.end) {
+            url += `&${searchWord.end}`;
+        }
+
+        router.push(url);
+    };
 
 
   return(
@@ -65,6 +84,7 @@ const Favorite = () => {
                               <td>{favorite.destination_city}</td>
                               <td>
                                   <button onClick={() => handleDelete(favorite.id)}>Delete</button>
+                                  <button onClick={() => searchWithit({ start: favorite.pick_up_city_id, end: favorite.destination_city_id })}>Search</button>
                               </td>
                           </tr>
                       ))}
