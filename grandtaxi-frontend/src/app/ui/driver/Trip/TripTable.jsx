@@ -144,7 +144,7 @@ const TripTable = () => {
                                             <span class="relative">completed</span>
                                         </option>
 
-                                        <option selected={item.status === 'expired'} value='expired' class="relative inline-block px-3 py-1 font-semibold text-white leading-tight">
+                                        <option disabled={item.status === 'completed' } selected={item.status === 'expired'} value='expired' class="relative inline-block px-3 py-1 font-semibold text-white leading-tight">
                                             <span aria-hidden class={`absolute inset-0 ${statusColor('expired')} opacity-50 rounded-full`}></span>
                                             <span class="relative">expired</span>
                                         </option>

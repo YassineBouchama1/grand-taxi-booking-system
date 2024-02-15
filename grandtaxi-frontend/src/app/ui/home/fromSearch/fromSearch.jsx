@@ -1,6 +1,7 @@
 'use client'
 
 import { setDate, setQuery, setTrips } from "@/Redux/trip/tripSlice";
+import notify from "@/hooks/useNotifaction";
 import { axiosClient } from "@/services/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,10 @@ const router = useRouter()
 
 
     const onSubmitSearch = async (e) => {
+console.log('clicked ')
+if(!date){
+    return notify('select date first', 'warn')
+}
 
         dispatch(setQuery({ date, start, end }));
         router.push('/search')

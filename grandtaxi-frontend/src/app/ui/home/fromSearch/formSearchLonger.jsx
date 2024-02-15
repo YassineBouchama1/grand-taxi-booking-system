@@ -6,10 +6,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const FormSearchLonger =  () => {
+const FormSearchLonger =  ({setDate}) => {
 
     const [cities, setCities] = useState([])
-    const [date, setDate] = useState(null)
+    // const [date, setDate] = useState(null)
     const [start, setStart] = useState(null)
     const [end, setEnd] = useState(null)
 
@@ -23,10 +23,10 @@ const fetchCities =async ()=>{
     },[])
 
 
-
     const onSubmitSearch = async (e)=>{
+if (!date) return notify('select date first', 'warn')
        
-        dispatch(setQuery({ date,start,end }));
+        // dispatch(setQuery({ date,start,end }));
 
     }
 

@@ -16,6 +16,9 @@ const router = useRouter()
 console.log(trip)
     const [toggle, setToggle] = useState(false)
     const user = useSelector((state) => state.auth.user)
+
+
+
     const onReservation = async ()=>{
 
     console.log(user)
@@ -25,7 +28,7 @@ console.log(trip)
         return notify("You Are Not Allow To Resserve .", "warn");
 
     }
-
+        console.log(trip.id)
     const formData = {
         "trip_id":trip.id
     }

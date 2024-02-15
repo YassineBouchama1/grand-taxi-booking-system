@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Rating from "./Raiting/Rating";
 import Modal from "../shared/Modal";
 import notify from "@/hooks/useNotifaction";
+import FavoriteApi from "@/services/FavoriteApi";
 
 
 const Reservations = () => {
@@ -72,7 +73,21 @@ setIdReservation(id)
     setToggle(!toggle)
 }
 
-console.log(rating)
+//add to favorite
+    const addToFavorite = async (dataFav) => {
+      
+
+        try {
+            const response = await FavoriteApi.create(dataFav);
+            console.log(response)
+            if(response.status === 201)return notify('added it succesfuly','success')
+            
+        } catch (error) {
+            notify('there is a error', 'warn')
+            console.error('Error creating favorite:', error);
+        }
+    };
+
 
 const statusColor = (status)=>{
 switch (status) {
@@ -92,6 +107,7 @@ return 'bg-blue-500'
 
   return(
     <div class=" px-4 sm:px-8 py-4 overflow-x-auto">
+        <h3 className="py-6 text-center">My Reservation & Histories</h3>
     <div class="inline-block min-w-full  transition-shadow rounded-[18px] shadow-md  backdrop-blur-md  overflow-hidden">
         <table class="min-w-full leading-normal">
             <thead>
@@ -154,7 +170,14 @@ return 'bg-blue-500'
                                           Review
                                       </button>
                                   )} */}
-
+                                  <button onClick={() => addToFavorite({
+                                   
+                                      pick_up_city_id: item.Pick_up_city_id,
+                                      destination_city_id: item.destination_city_id
+                                  })} type="button"
+                                      className="text-white bg-yellow-700 hover:bg-yellow-800 font-medium rounded-full text-sm px-5 py-1 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                      Add To Favorite
+                                  </button>
                                   <Modal
                                       shouldShow={toggle}
                                       onRequestClose={() => setToggle(false)}

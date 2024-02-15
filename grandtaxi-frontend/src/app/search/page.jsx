@@ -1,13 +1,17 @@
 'use client'
+import { useSearchParams } from "next/navigation";
 import HomeLayout from "../layouts/HomeLayout";
 import ListTrips from "../ui/home/ListTrips";
 import Filter from "../ui/home/fromSearch/Filter";
 import FormSearchLonger from "../ui/home/fromSearch/formSearchLonger";
+import { useQueryState } from 'nuqs'
 
 export default   function Home() {
-
-
-
+  const [rating, setRating] = useQueryState('rating')
+  const [date, setDate] = useQueryState('date')
+  const searchParams = useSearchParams()
+  const trem = searchParams?.has('rating') && searchParams.get('rating')
+  console.log(trem)
 
 
 
@@ -18,19 +22,19 @@ export default   function Home() {
 
     <section id="slider_hero" class="bg-cover bg-center relative   h-[300px] flex items-end justify-center" style={{ backgroundImage: `url('/assets/slider/3.jpg')` }} >
       <div class="bg-white rounded-tr-md rounded-tl-md w-full h-auto4 flex gap-x-10    max-w-screen-xl  px-4 mx-auto">
-        <FormSearchLonger/>
+        <FormSearchLonger setDate={setDate}/>
       </div>
     </section>
 
 
     <section class="flex gap-10  h-auto items-start justify-start pt-10 lg:justify-between flex-col lg:flex-row  max-w-screen-xl min-h-screen px-4 mx-auto">
 
-      <Filter/>
+      <Filter setRating={setRating}  />
 
 
                 <div id="card_trips" class="  basis-3/4	w-full h-auto flex flex-col gap-y-4">
   
-        <ListTrips/>
+        <ListTrips rating={rating} date={date}/>
 
                 </div>
               </section>

@@ -1,4 +1,5 @@
 'use client'
+import axios from "axios"
 import { axiosClient } from "./axios"
 
 const DriverApi = {
@@ -9,11 +10,12 @@ const DriverApi = {
     return await axiosClient.get('/drivers/show')
   },
   create: async (payload) => {
-    // Use axiosClient.post instead of axiosClient.create
+    
     return await axiosClient.post(`/drivers/create`, payload)
   },
     update: async (payload) => {
-    // Use axiosClient.post instead of axiosClient.create
+ 
+    //  await axios.get('http://127.0.0.1:80/sanctum/csrf-cookie');
     return await axiosClient.put(`/drivers/update`, payload)
   },
 }

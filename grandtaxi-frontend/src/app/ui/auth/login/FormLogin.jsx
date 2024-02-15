@@ -1,6 +1,7 @@
 'use client'
 
 import { setToken, setUser } from "@/Redux/auth/authSlice";
+import notify from "@/hooks/useNotifaction";
 import { createSession } from "@/lib/session";
 import { axiosClient } from "@/services/axios";
 import Image from "next/image";
@@ -60,6 +61,7 @@ const dispatch =useDispatch()
             const response = await axiosClient.post('/auth/login', formData);
             console.log(response);
             if (response.status === 201) {
+                if (response.data.data.user.status === 'deleted') return notify('you are suspanded','warn')
                 setCreatedMsg(response.data.message)
                 e.target.reset();
                 const token = response.data.data.token

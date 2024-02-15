@@ -46,6 +46,8 @@ const dispatch = useDispatch()
         try {
          
             const response = await DriverApi.update(formDataWithImage)
+            // const response = axiosClient.put(`/drivers/update`, formDataWithImage)
+            
             console.log(response);
             if (response.status === 201) {
            notify('profile updated','success')
@@ -106,9 +108,12 @@ const dispatch = useDispatch()
                     </div>
                 </div>
 
-                <div>
-                    <button type="submit" className="w-full flex justify-center bg-gradient-to-r from-green-600 to-green-600  hover:bg-green-to-l hover:from-green-600 hover:to-green-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
-                        Active
+                <div className="flex justify-between items-center">
+                    <button type="submit" className="w-full flex justify-center bg-gradient-to-r from-green-600 to-green-600  hover:bg-green-to-l hover:from-green-600 hover:to-green-600 text-gray-100 px-4 py-2  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
+                        Edit
+                    </button>
+                    <button onClick={()=>setToggleEdit(false)} type="button" className="w-70 flex justify-center bg-gradient-to-r from-black to-black  hover:bg-green-to-l hover:from-black hover:to-black text-gray-100 px-4 py-2  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
+                        Close
                     </button>
                 </div>
 

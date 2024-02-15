@@ -9,6 +9,7 @@ const initialState= {
   list:'',
   start:null,
   end:null,
+  rating:null,
   date:null,
   typeCar:null,
   
@@ -30,6 +31,7 @@ export const TripSLice = createSlice({
       state.start = action.payload?.start;
       state.end = action.payload?.end;
       state.typeCar = action.payload?.typeCar;
+      state.rating = action.payload?.rating;
     },
   },
 
