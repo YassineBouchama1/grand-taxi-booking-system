@@ -15,7 +15,7 @@ const FromSearch = () => {
     const [date, setDate] = useState(null);
 
 
-    const dispatch = useDispatch();
+  
 const router = useRouter()
     // Fetch cities data on component mount
     useLayoutEffect(() => {
@@ -29,8 +29,11 @@ const router = useRouter()
 
     const onSubmitSearch = async () => {
         console.log('clicked')
-        dispatch(setQuery({ date, start, end }));
-        router.push('/search')
+     // validate user fill all  inputs
+if(!date && !start && !end) return notify('fill inputs first','warn')
+     
+// send user to search page with new params
+        router.push(`/search?date=${date.toString()}&start=${start}&end=${end}`)
     };
 
     return <form className="bg-white rounded-lg  p-6 w-full">

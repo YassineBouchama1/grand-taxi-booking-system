@@ -1,62 +1,29 @@
-'use client'
 
-import { axiosClient } from "@/services/axios";
 import HomeLayout from "../layouts/HomeLayout";
 import ListTrips from "../ui/home/ListTrips";
 
 import FormSearchLonger from "../ui/home/fromSearch/formSearchLonger";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+const fetchTrips = async (params) => {
 
-export default   function Home() {
+  let url = `${process.env.BACKEND_URL}/api/trips`;
 
-  const [trips, setTrips] = useState([]);
-  const isloading = useSelector((state) => state.trip.isloading);
-  const date = useSelector((state) => state.trip.date);
-  const start = useSelector((state) => state.trip.start);
-  const end = useSelector((state) => state.trip.end);
-  const car = useSelector((state) => state.trip.car);
-  const rating = useSelector((state) => state.trip.rating);
+  if (params) {
+    const queries = await Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
+    url += `?${queries}`;
+  }
+  console.log(url)
+  const resp = await fetch(url)
+  const trips = await resp.json()
+  return trips;
 
-  const fetchData = async () => {
-    let url = `?q=null`;
-    if (date) {
-      url += `&date=${date}`;
-    }
-      if (start) {
-        url += `&start=${start}`;
-      }
-      if (end) {
-        url += `&end=${end}`;
-      }
-      if (car) {
-        url += `&typeCar=${car}`;
-      }
-      if (rating) {
-        url += `&rating=${rating}`;
-      }
-   
-    console.log(url)
-    console.log(car)
-    try {
-      const response = await axiosClient.get(`trips${url}`);
-      console.log(response)
- 
-      setTrips(response.data.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+}
+
+export default async function Home({ searchParams }) {
 
 
-  useEffect(() => {
- 
-    console.log('use effect')
-    console.log(isloading)
-    fetchData();
-  }, [isloading]);
 
-
+  const trips = await fetchTrips(searchParams)
+  console.log(trips)
 
   return (<HomeLayout>
 
@@ -74,7 +41,7 @@ export default   function Home() {
 
 
 
-      <ListTrips trips={trips}/>
+      <ListTrips trips={trips.data}/>
 
 
        
