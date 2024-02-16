@@ -27,14 +27,39 @@ const router = useRouter()
     }, []);
 
 
-    const onSubmitSearch = async () => {
-        console.log('clicked')
-     // validate user fill all  inputs
-if(!date && !start && !end) return notify('fill inputs first','warn')
-     
-// send user to search page with new params
-        router.push(`/search?date=${date.toString()}&start=${start}&end=${end}`)
+
+
+
+    const onSendToSearchPage = async () => {
+        console.log('clicked');
+
+        // Validate if the user has filled all inputs
+        if (!date && !start && !end) {
+            return notify('Fill inputs first', 'warn');
+        }
+
+        // Construct the query string
+        let queryString = '';
+        if (date) {
+            queryString += `date=${date}&`;
+        }
+        if (start) {
+            queryString += `start=${start}&`;
+        }
+        if (end) {
+            queryString += `end=${end}&`;
+        }
+
+        // Remove the trailing '&' if present
+        if (queryString.endsWith('&')) {
+            queryString = queryString.slice(0, -1);
+        }
+        console.log(queryString)
+        // Send the user to the search page with new params
+        // router.push(`/search?${queryString}`, { shallow: true });
     };
+
+
 
     return <form className="bg-white rounded-lg  p-6 w-full">
         <div className="grid grid-cols-2 gap-6">
@@ -69,7 +94,7 @@ if(!date && !start && !end) return notify('fill inputs first','warn')
 
 
         <div className="mt-4 flex justify-center">
-            <button onClick={() => onSubmitSearch()} type="button" id="findTripBtn" className="w-[150px] bg-green-700 hover:bg-green-600 text-white font-medium py-1 rounded-lg focus:outline-none">Find Tickets</button>
+            <button onClick={() => onSendToSearchPage()} type="button" id="findTripBtn" className="w-[150px] bg-green-700 hover:bg-green-600 text-white font-medium py-1 rounded-lg focus:outline-none">Find Tickets</button>
         </div>
     </form>;
 };
