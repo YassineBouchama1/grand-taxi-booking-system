@@ -110,7 +110,12 @@ const router = useRouter()
                     <div className="relative">
 
                         <label className="ml-3 text-sm font-bold text-gray-700 tracking-wide">Vehicle Type</label>
-                        <input type="text" name="vehicle_type" value={formData.vehicle_type} onChange={handleChange} className=" w-full text-base px-4 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-green-500" ></input>
+                        <select value={formData.vehicle_type} onChange={handleChange} name="vehicle_type" className="w-full text-base px-4 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-green-500">
+                            <option disabled value='' selected>Select Type Car</option>
+                            <option value="bmw">BMW</option>
+                            <option value="tesla">TESLA</option>
+                            <option value="cyberpunk">cyberpunk</option>
+                        </select>
                         {errors.name && <span className="text-red-500">{errors.vehicle_type}</span>}
                     </div>
                     <div className="relative">
@@ -126,8 +131,8 @@ const router = useRouter()
                 <div className="flex gap-x-2">
                     <div className="relative">
                         <label className="ml-3 text-sm font-bold text-gray-700 tracking-wide">Payment Type</label>
-                        <select onChange={handleChange} name="payment_type" className="w-full text-base px-4 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-green-500">
-                            <option disabled>Select Type Payment</option>
+                        <select onChange={handleChange }   name="payment_type" className="w-full text-base px-4 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-green-500">
+                            <option disabled value='' selected>Select Type Payment</option>
                             <option value="cash">Cash</option>
                             <option value="card">Card</option>
                         </select>

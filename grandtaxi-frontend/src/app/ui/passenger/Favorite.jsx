@@ -46,10 +46,10 @@ const router = useRouter()
 
         let url = `/search?tripo=null`;
         if (searchWord.start) {
-            url += `&${searchWord.start}`;
+            url += `&start=${searchWord.start}`;
         }
         if (searchWord.end) {
-            url += `&${searchWord.end}`;
+            url += `&end=${searchWord.end}`;
         }
 
         router.push(url);

@@ -15,6 +15,9 @@ const AdminApi = {
     // Use axiosClient.post instead of axiosClient.create
     return await axiosClient.post(`/drivers/create`, payload)
   },
+    createReserve: async (payload) => {
+    return await axiosClient.post(`/reservations/admin`, payload)
+  },
     deleteUser: async (user_id) => {
     // Use axiosClient.post instead of axiosClient.create
     return await axiosClient.delete(`/auth/deleteUser/${user_id}`)

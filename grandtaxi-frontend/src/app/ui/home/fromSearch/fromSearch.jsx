@@ -33,7 +33,16 @@ if(!date){
 }
 
         dispatch(setQuery({ date, start, end }));
-        router.push('/search')
+        
+        let url = `/search?tripo=null`;
+
+        if (start) {
+            url += `&start=${start}`;
+        }
+        if (end) {
+            url += `&end=${end}`;
+        }
+        router.push(url)
         console.log('clciked ')
     }
 

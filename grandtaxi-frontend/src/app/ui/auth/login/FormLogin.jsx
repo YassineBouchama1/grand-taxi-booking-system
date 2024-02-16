@@ -141,8 +141,7 @@ const dispatch =useDispatch()
                 </div>
                 <p className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-500">
                     <span>Do You have an account?</span>
-                    {/* <Link  className="text-green-600 hover:text-green-600 no-underline hover:underline cursor-pointer transition ease-in duration-300">
-                        Sign up</Link> */}
+               
                 </p>
             </form>
         </div>

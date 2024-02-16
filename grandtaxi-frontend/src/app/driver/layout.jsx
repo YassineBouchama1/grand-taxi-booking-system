@@ -16,11 +16,11 @@ export default function HomeLayout({ children }) {
     const route = useRouter();
     const [user, setUser] = useState(null)
     const [toggleLoader, setToggleLoader] = useState(true)
-
+console.log('which page')
     useEffect(() => {
         if (!userStatus && userStatus?.role_id !== 3) return route.push('/');
     }, []);
-    // console.log(user.driver)
+
 
 
 

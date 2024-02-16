@@ -8,10 +8,11 @@ const initialState= {
  
   list:'',
   start:null,
+  car:null,
   end:null,
   rating:null,
   date:null,
-  typeCar:null,
+
   
 
 
@@ -26,16 +27,26 @@ export const TripSLice = createSlice({
       state.list = action.payload;
     },
         setQuery: (state, action) => {
-            console.log(action.payload)
+        
       state.date = action.payload?.date;
+      state.car = action.payload?.car;
       state.start = action.payload?.start;
       state.end = action.payload?.end;
-      state.typeCar = action.payload?.typeCar;
+
       state.rating = action.payload?.rating;
     },
+        setCar: (state, action) => {
+          console.log('car Redux',action.payload)
+      state.car = action.payload;
+    },
+        setRating: (state, action) => {
+          console.log('rating redux',action.payload)
+      state.rating = action.payload;
+    },
+    
   },
 
 });
 
-export const { setTrips ,setQuery} = TripSLice.actions;
+export const { setTrips ,setQuery,setCar,setRating} = TripSLice.actions;
 export default TripSLice.reducer;

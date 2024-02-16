@@ -1,13 +1,40 @@
 'use client'
 
-import { setQuery } from "@/Redux/trip/tripSlice";
+import { setCar, setQuery, setRating } from "@/Redux/trip/tripSlice";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-const Filter = ({ setRating }) => {
+const Filter = () => {
+
+
+
+    const ratingRedux = useSelector((state) => state.trip.rating);
+    const carRedux = useSelector((state) => state.trip.car);
+
+    const [rating, setRating] = useState(ratingRedux)
+    const [car, setCar] = useState(carRedux)
+
     const dispatch = useDispatch()
- const searchParams =   useSearchParams();
+
+
+
+
+
+    const onSubmitSearch = async () => {
+
+      
+
+        dispatch(setQuery({ rating, car }));
+        // let url = `/search?tripo=null`;
+        // if (start) {
+        //     url += `&start=${sstart}`;
+        // }
+        // if (end) {
+        //     url += `&end=${end}`;
+        // }
+
+    }
 
 
  
@@ -29,7 +56,7 @@ const Filter = ({ setRating }) => {
                     <span class="bg-[#f6f6f7] rounded-md w-2/2 px-2 flex gap-x-3 items-center">ALL</span>
                 </label>
                 <label for="allcompany" class="flex items-center gap-x-4 text-gray-400">
-                    <input onChange={(e) => dispatch(setQuery({ 'typeCar':e.target.value }))} id="allcompany" type="radio" name="company" value="BMW" class="accent-green-600 border-2 w-4 h-4 text-green-600 bg-gray-100 border-green-300 rounded focus:ring-green-600" ></input>
+                    <input value="tesla" onChange={(e) => setCar(e.target.value)} type="radio"  class="accent-green-600 border-2 w-4 h-4 text-green-600 bg-gray-100 border-green-300 rounded focus:ring-green-600" ></input>
                     <span class="bg-[#f6f6f7] rounded-md w-2/2 px-2 flex gap-x-3 items-center">tesla</span>
                 </label>
             </div>
@@ -40,9 +67,9 @@ const Filter = ({ setRating }) => {
             <p class='font-bold py-4'>driver ratings</p>
 
             <div>
-                <select onChange={e => (searchParams.set('raing', e.target.value))} class="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
+                <select onChange={e => setRating(e.target.value )} class="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
                     <option class="text-gray-400" value="" disabled selected>sorting By</option>
-                    <option value={null}>ALL</option>
+            
                     <option value="5">5</option>
                     <option value="4">5</option>
                     <option value="3">3</option>
@@ -55,7 +82,7 @@ const Filter = ({ setRating }) => {
 
         </div>
         
-
+        <button onClick={() => onSubmitSearch()}>Filter</button>
   
 
     </div>;
