@@ -9,6 +9,7 @@ use App\Models\Driver;
 use App\Models\Passenger;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,56 +23,57 @@ class AuthController extends Controller
 
 
 
-
     public function register(Request $request)
     {
         try {
-            //1-Validated
-            $validateUser = Validator::make(
-                $request->all(),
-                [
-                    'name' => 'required',
-                    'email' => 'required|email|unique:users,email',
-                    'password' => 'required',
-                    'role_id' => 'required',
-                    'contact_info' => 'required',
-                ]
-            );
+            // Validate the request
+            $validateUser = Validator::make($request->all(), [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required',
+                'role_id' => 'required',
+                'contact_info' => 'required',
+                'profile_photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Max size 2MB
+            ]);
 
-
-            //2-if there is errors return it
+            // Check for validation errors
             if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'validation error',
+                    'message' => 'Validation error',
                     'errors' => $validateUser->errors()
                 ], 401);
             }
-            //3-create account
+
+            // Move the uploaded image to public/images directory
+            $imageName = time() . '.' . $request->profile_photo->extension();
+            $request->profile_photo->move(public_path('images'), $imageName);
+
+            // Create the user account and save the image path in the database
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role_id' => $request->role_id,
+                'role_id' => (int)$request->role_id,
+                'contact_info' => $request->contact_info,
+                'profile_photo' => 'images/' . $imageName, // Save the image path in the database
                 'status' => (int)$request->role_id === 3 ? 'inactive' : 'active'
             ]);
-
-            //4-generate token
-            // $data['token'] = $user->createToken($request->email)->plainTextToken;
-            // $data['user'] = $user;
-
 
             // Retrieve the role name using the relationship
             $roleName = $user->role->name;
 
+            // Construct the full URL for the image
+            $imageUrl = asset($user->profile_photo);
 
-            $response = [
+            // Return success response with image URL
+            return response()->json([
                 'status' => 'success',
                 'message' => 'User is created successfully.',
                 'user Role' =>  $roleName,
-            ];
-
-            return response()->json($response, 201);
+                'user' =>  $user,
+                'image_url' => $imageUrl // Include the image URL in the response
+            ], 201);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -117,6 +119,7 @@ class AuthController extends Controller
 
             $data['token'] = $user->createToken($request->email)->plainTextToken;
             $data['user'] = $user;
+
             // $data['isValid'] = $user->hasDriverInformation;
 
             $response = [
@@ -125,8 +128,7 @@ class AuthController extends Controller
                 'data' => $data,
             ];
 
-            return response()->json($response, 200);
-            
+            return response()->json($response, 201);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -135,6 +137,109 @@ class AuthController extends Controller
         }
     }
 
+
+
+
+    public function statics()
+    {
+
+
+        $users = DB::table('users')
+            ->whereNotIn('role_id', [1])
+            ->get()
+            ->count();
+        $reservations = DB::table('reservations')
+
+            ->get()
+            ->count();
+        return response()->json([
+            'message' => 'Successfully',
+            'users' => $users,
+            'reservations' => $reservations
+        ], 201);
+    }
+
+
+    public function usersNotAdmin()
+    {
+
+
+        $users = DB::table('users')
+            ->whereNotIn('role_id', [1])
+            ->get();
+
+
+        return response()->json([
+            'message' => 'Successfully ',
+            'users' => $users,
+
+        ], 201);
+    }
+
+
+    public function deleteUser(Request $request)
+    {
+
+        if (!$request->user_id) {
+            return response()->json([
+                'status' => false,
+                'message' => 'id is required',
+            ], 402);
+        }
+
+
+        User::find($request->user_id)->update(['status' => 'deleted']);
+        User::find($request->user_id)->delete();
+
+        return response()->json([
+            'message' => 'user deleted Successfully ',
+
+
+        ], 201);
+    }
+
+
+
+    public function restorUser(Request $request)
+    {
+
+        if (!$request->user_id) {
+            return response()->json([
+                'status' => false,
+                'message' => 'id is required',
+            ], 402);
+        }
+
+        User::withTrashed()->find($request->user_id)->update(['status' => 'active']);
+        User::withTrashed()->find($request->user_id)->restore();
+
+
+
+        return response()->json([
+            'message' => 'user Restored Successfully ',
+
+
+        ], 201);
+    }
+
+
+
+    //passengers
+    public function passengers()
+    {
+
+
+        $passengers = DB::table('passengers')
+            ->whereNotIn('role_id', [1, 3])
+            ->get();
+
+
+        return response()->json([
+            'message' => 'data passengers come Successfully ',
+            'users' => $passengers,
+
+        ], 201);
+    }
 
 
     public function logout()

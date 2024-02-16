@@ -42,7 +42,7 @@ class DriverController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'You must be a Driver to create a reservation. or User already has a driver profile',
-            ], 401);
+            ], 402);
         }
 
         $user = Auth::user();
@@ -71,12 +71,15 @@ class DriverController extends Controller
 
         // Save the driver profile
         $driver->save();
-
+        $request->user()->driver;
         // Update the user status to active
         $user->status = 'active';
         $user->save();
 
-        return response()->json(['message' => 'Driver profile created successfully'], 200);
+        return response()->json([
+            'message' => 'Driver profile created successfully',
+            'user' => $request->user()
+        ], 201);
     }
 
 
@@ -94,22 +97,16 @@ class DriverController extends Controller
         }
         $request->user()->driver;
 
-        // if (!$request->user()->can('view', $driver)) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => "this driver dosn't belong to you",
-        //     ], 401);
-        // }
-
 
         // If the user is not a driver or has filled driver information, return the user details
         $response = [
             'status' => 'success',
             'message' => 'User details retrieved successfully.',
             'user' => $request->user(),
+
         ];
 
-        return response()->json($response, 200);
+        return response()->json($response, 201);
     }
 
 
@@ -117,22 +114,47 @@ class DriverController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Driver $driver)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request)
     {
-        // Get the authenticated user's driver details
         $driver = $request->user()->driver;
 
-
-        // chekc with poilices if user owen this driver
+        // Check if the authenticated user owns this driver
         if (!$request->user()->can('update', $driver)) {
             return response()->json([
                 'status' => false,
-                'message' => "you can't update driver cuz dosn't belong to you",
-            ], 401);
+                'message' => "You can't update this driver because it doesn't belong to you.",
+            ], 402);
         }
 
-        // Update driver data based on request input
-        $driver->fill($request->only([
+
+        $dataUser = array_filter($request->only([
+            'name',
+            'password', // You might want to handle password update securely
+            'profile_photo',
+        ]));
+
+
+        dd($request->hasFile('image'));
+
+        // Check if a new image is provided
+        if ($request->hasFile('image')) {
+            // Store the uploaded image
+            $imagePath = $request->file('profile_photo')->store('images', 'public');
+            // Update the image path in the database
+
+            $request->user()->profile_photo = $imagePath;
+            $request->user()->save();
+            dd($imagePath, $request->user()->profile_photo);
+        }
+
+        // Update user data if provided
+        $request->user()->update($dataUser);
+
+        // Filter request data to remove null values
+        $data = array_filter($request->only([
             'description',
             'license_plate_number',
             'vehicle_type',
@@ -144,6 +166,8 @@ class DriverController extends Controller
             'revenue'
         ]));
 
+        // Update driver data based on request input
+        $driver->fill($data);
 
         // Save the updated driver details
         $driver->save();
@@ -151,11 +175,13 @@ class DriverController extends Controller
         $response = [
             'status' => 'success',
             'message' => 'Driver details updated successfully.',
-            'driver' => $driver
+            'user' => $request->user(),
+            // 'driver' => $request->user()->driver,
         ];
 
-        return response()->json($response, 200);
+        return response()->json($response, 201);
     }
+
 
     /**
      * Remove the specified resource from storage.

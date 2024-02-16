@@ -1,16 +1,60 @@
 'use client'
-import { useSearchParams } from "next/navigation";
+
+import { axiosClient } from "@/services/axios";
 import HomeLayout from "../layouts/HomeLayout";
 import ListTrips from "../ui/home/ListTrips";
-import Filter from "../ui/home/fromSearch/Filter";
+
 import FormSearchLonger from "../ui/home/fromSearch/formSearchLonger";
-import { useQueryState } from 'nuqs'
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export default   function Home() {
 
-  // const trem = searchParams?.has('rating') && searchParams.get('rating')
-  // console.log(trem)
+  const [trips, setTrips] = useState([]);
+  const isloading = useSelector((state) => state.trip.isloading);
+  const date = useSelector((state) => state.trip.date);
+  const start = useSelector((state) => state.trip.start);
+  const end = useSelector((state) => state.trip.end);
+  const car = useSelector((state) => state.trip.car);
+  const rating = useSelector((state) => state.trip.rating);
 
+  const fetchData = async () => {
+    let url = `?q=null`;
+    if (date) {
+      url += `&date=${date}`;
+    }
+      if (start) {
+        url += `&start=${start}`;
+      }
+      if (end) {
+        url += `&end=${end}`;
+      }
+      if (car) {
+        url += `&typeCar=${car}`;
+      }
+      if (rating) {
+        url += `&rating=${rating}`;
+      }
+   
+    console.log(url)
+    console.log(car)
+    try {
+      const response = await axiosClient.get(`trips${url}`);
+      console.log(response)
+ 
+      setTrips(response.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+
+  useEffect(() => {
+ 
+    console.log('use effect')
+    console.log(isloading)
+    fetchData();
+  }, [isloading]);
 
 
 
@@ -30,9 +74,8 @@ export default   function Home() {
 
 
 
-            
-  
-        <ListTrips />
+      <ListTrips trips={trips}/>
+
 
        
             </section>

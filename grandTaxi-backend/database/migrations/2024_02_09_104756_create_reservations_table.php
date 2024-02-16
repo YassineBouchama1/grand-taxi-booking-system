@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('trip_id')->constrained('trips')->onDelete('cascade');
             $table->enum('status', ['booked', 'canceled', 'completed'])->default('booked');
             $table->softDeletes();
+
             $table->timestamps();
         });
     }

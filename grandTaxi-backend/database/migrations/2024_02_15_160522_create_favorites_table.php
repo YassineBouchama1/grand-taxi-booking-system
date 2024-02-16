@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trips', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('driver_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedInteger('duration_minutes');
+            $table->foreignId('passenger_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('pick_up_city_id')->constrained('cities')->onDelete('cascade');
             $table->foreignId('destination_city_id')->constrained('cities')->onDelete('cascade');
-            $table->enum('status', ['waiting', 'full', 'en_route', 'completed', 'expired', 'canceled'])->default('waiting');
-            $table->dateTime('pickup_datetime');
-            $table->decimal('price', 10, 2);
-            $table->integer('seats');
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trips');
+        Schema::dropIfExists('favorites');
     }
 };

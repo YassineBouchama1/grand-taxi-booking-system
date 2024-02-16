@@ -16,25 +16,51 @@ class TripController extends Controller
      */
     public function getAllTrips(Request $request)
     {
+        // Get the request parameters for filtering
+        $date = $request->input('date');
+        $start = $request->input('start');
+        $end = $request->input('end');
+        $typeCar = $request->input('typeCar');
+        $rating = $request->input('rating');
+
+        // Start building the query
+        $query = Trip::query();
+
+        // Include the driver relationship
+        // $query->join('users', 'trips.driver_id', '=', 'users.id')
+        //     ->join('drivers', 'users.id', '=', 'drivers.user_id');
 
 
-        //check if user ispassenger
-        if (!$request->user()->can('viewAny', Trip::class)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'You are not allow to  see trips ',
 
-            ], 401);
+        // Apply filters if provided
+        if ($date) {
+            $query->whereDate('pickup_datetime', $date);
         }
+        if ($start) {
+            $query->where('pick_up_city_id', $start);
+        }
+        if ($end) {
+            $query->where('destination_city_id', $end);
+        }
+        // if ($typeCar) {
+        //     $query->where('drivers.vehicle_type', $typeCar);
+        // }
+        // if ($rating) {
+        //     $query->where('drivers.rating', (int)$rating);
+        // }
 
-        $trips = Trip::get();
+        // Execute the query with pagination
+        $trips = $query->paginate(20);
 
+        // Return the JSON response
         return response()->json([
             'status' => true,
-            'message' => 'this is data',
+            'message' => 'This is data',
             'data' => TripResource::collection($trips)
-        ]);
+        ], 201);
     }
+
+
 
 
     //get my trips
@@ -46,8 +72,24 @@ class TripController extends Controller
             'status' => true,
             'message' => 'this is data',
             'data' => TripResource::collection($trips)
-        ]);
+        ], 201);
     }
+
+
+    public function historiesFun(Request $request)
+    {
+        // dd($request->user()->id);
+        $trips = Trip::where('driver_id', $request->user()->id)
+            ->withTrashed() // Corrected function name
+            ->get(); // Use get() instead of all() to execute the query
+
+        return response()->json([
+            'status' => true,
+            'message' => 'This is data',
+            'data' => TripResource::collection($trips)
+        ], 201);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -62,7 +104,7 @@ class TripController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'you are not active to create trips or u are not a driver',
-            ], 401);
+            ], 402);
         }
 
         // Validate request data
@@ -87,6 +129,20 @@ class TripController extends Controller
             ], 401);
         }
 
+
+        // Check if the driver already has a trip scheduled for the same pickup date
+        $existingTrip = Trip::where('driver_id', $user->id)
+            ->whereDate('pickup_datetime', '=', date('Y-m-d', strtotime($request->pickup_datetime)))
+            ->first();
+
+        if ($existingTrip) {
+            return response()->json([
+                'status' => false,
+                'message' => 'You already have a trip scheduled for the same pickup date.',
+            ], 403);
+        }
+
+
         // Create a new driver profile for the user
         $trip = new Trip($request->all());
         // Associate the driver profile with the user
@@ -95,7 +151,7 @@ class TripController extends Controller
         // Save the driver profile
         $trip->save();
 
-        return response()->json(['message' => 'Driver profile created successfully'], 200);
+        return response()->json(['message' => 'Driver profile created successfully'], 201);
     }
 
 
@@ -113,7 +169,7 @@ class TripController extends Controller
                 'status' => false,
                 'message' => 'Validation error',
                 'errors' => $validator->errors(),
-            ], 422);
+            ], 401);
         }
 
         // Find the trip by its ID
@@ -122,13 +178,13 @@ class TripController extends Controller
 
         // if there is no trip under this id return error
         if (!$trip) {
-            return response()->json(['message' => 'there is no trip belong this id',], 404);
+            return response()->json(['message' => 'there is no trip belong this id',], 402);
         }
 
 
         // if trip already complte and want update to somthing else  refuse
         if ($trip->status === 'completed') {
-            return response()->json(['message' => 'already complted this trip',], 404);
+            return response()->json(['message' => 'already complted this trip',], 402);
         }
 
         // Update the status of the trip
@@ -138,7 +194,7 @@ class TripController extends Controller
 
         //chekc if status if complted
         if ($trip->status === 'completed') {
-            $reservations =   Reservation::where('trip_id', $trip->id)->update(['status' => 'completed']);
+            $reservations =   Reservation::where('trip_id', $trip->id)->update(['status' => 'completed'], 201);
             //here create reviews for each reservation
         }
 
@@ -158,7 +214,7 @@ class TripController extends Controller
         //     $review->save();
         // }
 
-        return response()->json(['message' => 'Trip status updated successfully'], 200);
+        return response()->json(['message' => 'Trip status updated successfully'], 201);
     }
 
 
@@ -181,7 +237,7 @@ class TripController extends Controller
             ], 401);
         }
         if (!$trip) {
-            return response()->json(['message' => 'there is no trip belong this id',], 404);
+            return response()->json(['message' => 'there is no trip belong this id',], 402);
         }
 
 
@@ -199,14 +255,14 @@ class TripController extends Controller
         $trip = Trip::find($id);
 
         if (!$trip) {
-            return response()->json(['message' => 'Trip not found'], 404);
+            return response()->json(['message' => 'Trip not found'], 402);
         }
         // chekc with poilices if user owen this trip
         if (!$request->user()->can('update', $trip)) {
             return response()->json([
                 'status' => false,
                 'message' => "you can't update trip cuz dosn't belong to you",
-            ], 401);
+            ], 402);
         }
 
         // Update trip data based on request input
@@ -229,7 +285,7 @@ class TripController extends Controller
             'trip' => $trip
         ];
 
-        return response()->json($response, 200);
+        return response()->json($response, 201);
     }
 
 
@@ -241,13 +297,14 @@ class TripController extends Controller
             return response()->json(['message' => 'there is no trip belong this ' . $id], 404);
         }
         // chekc with poilices if user owen this trip
-        if (!$request->user()->can('show', $trip)) {
+        if (!$request->user()->can('delete', $trip)) {
             return response()->json([
                 'status' => false,
                 'message' => "you can't delete trip cuz dosn't belong to you",
-            ], 401);
+            ], 402);
         }
-
+        $trip->status = 'canceled';
+        $trip->save();
         $trip->delete();
 
         return response()->json(['status' => true, 'message' => 'trip belong id : ' . $id . 'Deleted'], 200);

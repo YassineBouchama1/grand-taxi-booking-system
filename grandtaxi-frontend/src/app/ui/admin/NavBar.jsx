@@ -1,6 +1,8 @@
 "use client";
 
+import { setToken, setUser } from "@/Redux/auth/authSlice";
 import { setToggleNavbar } from "@/Redux/global/globalSlice";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,6 +12,18 @@ import { useDispatch, useSelector } from "react-redux";
 export default function NavBar() {
   const dispatch = useDispatch();
   const toggleNavBar = useSelector((state) => state.global.toggleNavBar);
+  const router = useRouter()
+  const onLogOutBtn = () => {
+
+    // console.log(logoutCookies())
+    localStorage.clear()
+    dispatch(setUser(null))
+    dispatch(setToken(null))
+    localStorage.clear()
+
+    router.push('/')
+  }
+
 
   return (
     <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -42,7 +56,7 @@ export default function NavBar() {
               </span>
             </a>
           </div>
-          logout
+          <button onClick={() => onLogOutBtn()}>Logout</button>
           {/* <LogOut /> */}
         </div>
       </div>

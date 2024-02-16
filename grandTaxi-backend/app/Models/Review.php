@@ -2,28 +2,33 @@
 
 namespace App\Models;
 
+use App\Models\Trip;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Reservation extends Model
+class Review extends Model
 {
+
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'passenger_id',
         'trip_id',
-        'status',
-        'isReviewed'
+        'passenger_id',
+        'rating',
+        'comment',
+        'is_passenger_review'
     ];
-    // Define relationships if necessary
-    public function passenger()
-    {
-        return $this->belongsTo(User::class, 'passenger_id');
-    }
 
+    // Define relationships if needed
     public function trip()
     {
         return $this->belongsTo(Trip::class, 'trip_id');
+    }
+
+    public function passenger()
+    {
+        return $this->belongsTo(User::class, 'passenger_id');
     }
 }

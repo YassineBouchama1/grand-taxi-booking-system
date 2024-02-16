@@ -9,11 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 const FormSearchLonger = () => {
     const [cities, setCities] = useState([]);
-    const [start, setStart] = useState('');
-    const [end, setEnd] = useState('');
-    const [date, setDate] = useState('');
-    const [rating, setRating] = useState('');
-    const [car, setCar] = useState('');
+    const [start, setStart] = useState(null);
+    const [end, setEnd] = useState(null);
+    const [date, setDate] = useState(null);
+    const [rating, setRating] = useState(null);
+    const [car, setCar] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -26,19 +26,13 @@ const FormSearchLonger = () => {
         fetchCities();
     }, []);
 
-    // Use useSearchParams only on the client side
-    const params = new URLSearchParams(window.location.search);
-    useEffect(() => {
-        setStart(params.get('start') || '');
-        setEnd(params.get('end') || '');
-        setDate(params.get('date') || '');
-    }, []);
 
     const onSubmitSearch = async () => {
+        console.log('clicked')
         dispatch(setQuery({ date, start, end, rating, car }));
     };
 
-    return <form className="bg-white rounded-lg  p-6 w-full">
+    return <form  className="bg-white rounded-lg  p-6 w-full">
         <div className="grid grid-cols-2 gap-6">
             <div className="col-span-2 sm:col-span-1 ">
 
@@ -47,7 +41,7 @@ const FormSearchLonger = () => {
                 <select value={start} onChange={(e) => setStart(e.target.value)} id="departure" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500 ">
                     <option className="text-gray-400" value='' disabled selected>Pick departure</option>
                     {cities?.data?.map((city, index) => (
-                        <option key={index} value={city.id} selected={params.get('start') == city.id }>{city.name}</option>
+                        <option key={index} value={city.id} >{city.name}</option>
                     ))}
 
                 </select>
@@ -57,14 +51,14 @@ const FormSearchLonger = () => {
                 <select value={end} onChange={(e) => setEnd(e.target.value)} id="destination" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
                     <option className="text-gray-400 " value="" disabled selected>Pick destination</option>
                     {cities?.data?.map((city, index) => (
-                        <option key={index} value={city.id} selected={params.get('end') == city.id}>{city.name}</option>
+                        <option key={index} value={city.id} >{city.name}</option>
                     ))}
                 </select>
             </div>
 
 
             <div className="col-span-2 sm:col-span-1 ">
-                <input value={params.get('date') ? params.get('date'):null} onChange={(e) => setDate(e.target.value)} type="date" name="date" id="date" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500" />
+                <input  onChange={(e) => setDate(e.target.value)} type="date" name="date" id="date" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500" />
             </div>
         </div>
         <h4 className="text-center py-4">Filter</h4>

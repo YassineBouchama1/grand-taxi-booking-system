@@ -18,5 +18,8 @@ const TripApi = {
   all: async () => {
     return await axiosClient.get('/trips/my')
   },
+    forAlll: async () => {
+    return await axiosClient.get('/trips')
+  },
 }
 export default TripApi

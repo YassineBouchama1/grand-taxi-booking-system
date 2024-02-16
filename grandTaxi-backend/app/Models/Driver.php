@@ -20,7 +20,8 @@ class Driver extends Model
         'payment_type',
         'location_latitude',
         'location_longitude',
-        'revenue'
+        'revenue',
+        'total_reviews'
     ];
 
     // to convert it to datetime usieng carbon

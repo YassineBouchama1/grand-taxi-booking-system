@@ -53,7 +53,7 @@ class TripPolicy
 
     public function delete(User $user, Trip $trip): bool
     {
-        return $user->id === $trip->user_id;
+        return $user->id === $trip->driver_id;
     }
 
     /**
