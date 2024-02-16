@@ -56,7 +56,7 @@ const router = useRouter()
         }
         console.log(queryString)
         // Send the user to the search page with new params
-        // router.push(`/search?${queryString}`, { shallow: true });
+        router.push(`/search?${queryString}`);
     };
 
 
