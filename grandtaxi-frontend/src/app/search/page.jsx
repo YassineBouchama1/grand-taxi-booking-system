@@ -1,10 +1,12 @@
 
-import HomeLayout from "../layouts/HomeLayout";
-import ListTrips from "../ui/home/ListTrips";
+import { getSession } from "@/lib/session";
 
+import ListTrips from "../ui/home/ListTrips";
 import FormSearchLonger from "../ui/home/fromSearch/formSearchLonger";
+import NavBar from "../ui/shared/navbar/NavBar";
 const fetchTrips = async (params) => {
 
+//build ur extend of params comes from query
   let url = `${process.env.BACKEND_URL}/api/trips`;
 
   if (params) {
@@ -20,12 +22,14 @@ const fetchTrips = async (params) => {
 
 export default async function Home({ searchParams }) {
 
-
-
+const session = await getSession();
+console.log(session)
+  //bring trips 
   const trips = await fetchTrips(searchParams)
-  console.log(trips)
 
-  return (<HomeLayout>
+
+  return (<>
+       <NavBar />
 
 
 
@@ -46,7 +50,8 @@ export default async function Home({ searchParams }) {
 
        
             </section>
-  </HomeLayout>
+            </>
+
 
     ) 
 }

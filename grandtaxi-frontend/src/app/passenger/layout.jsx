@@ -1,22 +1,39 @@
 'use client'
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { redirect, useRouter } from "next/navigation";
 import NavBar from "../ui/shared/navbar/NavBar";
 import BarBtns from "../ui/passenger/BarBtns";
 import Image from "next/image";
+import isAuth from "@/lib/isAuth";
 
 
 
-export default function HomeLayout({ children }) {
+const  Layout = ({ children }) =>{
+
     const user = useSelector((state) => state.auth.user)
-    const router = useRouter()
-    // const session = getSession
-    useLayoutEffect(() => {
+    // const [isLoading, setLoading] = useState(true);
 
-        if (user?.role_id !== 2) return redirect('/')
+    // // const session = getSession
 
-    }, [])
+    // //waiting for check role
+    // useLayoutEffect(() => {
+    //     if (!user && user?.role_id !== 2) {
+    //         setLoading(false);
+    //         return redirect("/");
+    //     }
+    //     else {
+    //         setLoading(false);
+    //     }
+    // }, []);
+
+
+
+    // if (isLoading) {
+    //     // rrender loader while checking authentication status
+    //     return <h2>loading...</h2>;
+    // }
+
     return (
         < >
             <NavBar />
@@ -36,13 +53,13 @@ export default function HomeLayout({ children }) {
                         )}
                         <div>
                             <p className="font-black">Email</p>
-                            <p>{user.email}</p>
+                            <p>{user?.email}</p>
                         </div>
 
                         <span className="w-[1px] min-h-[40px] bg-black text-black"></span>
                         <div>
                             <p className="font-black">Phone</p>
-                            <p>{user.contact_info ? user.contact_info : 'no information'}</p>
+                            <p>{user?.contact_info ? user.contact_info : 'no information'}</p>
                         </div>
 
 
@@ -57,3 +74,6 @@ export default function HomeLayout({ children }) {
         </>
     );
 }
+
+
+export default isAuth(Layout,2);

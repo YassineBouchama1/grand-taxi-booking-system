@@ -1,38 +1,38 @@
 'use client'
-import { getSession } from "@/lib/session";
 import NavBar from "../ui/shared/navbar/NavBar";
 import { useSelector } from "react-redux";
 import AlertActive from "../ui/driver/AlertActive/AlertActive";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
 import Image from "next/image";
 import BarButtons from "../ui/driver/BarButtons";
 import DriverApi from "@/services/DriverApi";
 import Loader from "../ui/shared/Loader";
 
+import isAuth from "@/lib/isAuth";
 
-export default function HomeLayout({ children }) {
+
+const  Layout = ({ children }) =>{
     const userStatus = useSelector((state) => state.auth.user);
-    const route = useRouter();
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(false)
     const [toggleLoader, setToggleLoader] = useState(true)
-console.log('which page')
-    useEffect(() => {
-        if (!userStatus && userStatus?.role_id !== 3) return route.push('/');
-    }, []);
 
 
 
-
-
+// fetch  data user
     const fetchData = async () => {
-
+        setLoading(true)
         try {
             const response = await DriverApi.show()
             setUser(response.data.user);
+                    setLoading(false)
+
             
      console.log(response.data.user)
         } catch (error) {
+                                setLoading(false)
+
             console.error("Error fetching data:", error);
             setToggleLoader(false)
         }
@@ -41,11 +41,13 @@ console.log('which page')
 
 
         fetchData();
-        console.log(user)
+      
     }, [userStatus]);
+
+
     return (
         <>
-            <NavBar user={user}/>
+           {loading?<div>Loading...</div>:<NavBar user={user}/>} 
             {toggleLoader && <Loader />}
             {userStatus && userStatus.status === 'inactive' ? (
                 <div className="bg-white w-full h-full flex items-center">
@@ -66,44 +68,26 @@ console.log('which page')
                                     </div>
                                     )}
                                     <span className="w-[1px] min-h-[40px] bg-black text-black"></span>
+{!(user && user.driver) ? null : (
 
-                                    {!(user && user.driver) ? null : (
-
-                                        <div>
+                                        <><div>
                                             <p className="font-black">description</p>
                                             <p>{user.driver.description}</p>
-                                        </div>
-                                    )}
-
-                                    <div>
-                                        <p className="font-black">Email</p>
-                                        <p>{user && user.email}</p>
-                                    </div>
-
-                                    {!(user && user.contact_info) ? null : (
-
-                                        <div>
-                                            <p className="font-black">Phone</p>
-                                            <p>{user.contact_info}</p>
-                                        </div>
-                                    )}
-
-                                    {!(user && user.driver) ? null : (
-
-                                        <div>
-                                            <p className="font-black">Vehicle Type</p>
-                                            <p>{user.driver.vehicle_type}</p>
-                                        </div>
-                                    )}
-
-                                    {!(user && user.driver) ? null : (
-
-                                        <div>
-                                            <p className="font-black">Raiting</p>
-                                            <p>{user.driver.rating}</p>
-                                        </div>
-                                    )}
-
+                                        </div><div>
+                                                <p className="font-black">Email</p>
+                                                <p>{user && user.email}</p>
+                                            </div><div>
+                                                <p className="font-black">Phone</p>
+                                                <p>{user.contact_info}</p>
+                                            </div><div>
+                                                <p className="font-black">Vehicle Type</p>
+                                                <p>{user.driver.vehicle_type}</p>
+                                            </div><div>
+                                                <p className="font-black">Raiting</p>
+                                                <p>{user.driver.rating}</p>
+                                            </div></>
+                                  
+  )}
                                 </div>
 
 
@@ -119,3 +103,4 @@ console.log('which page')
         </>
     );
 }
+export default isAuth(Layout,3);

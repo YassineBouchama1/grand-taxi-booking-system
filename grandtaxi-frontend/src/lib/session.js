@@ -31,10 +31,22 @@ export async function createSession(user) {
 
   // Create the session
   const expires = new Date(Date.now() + 10 * 1000);
-  const session = await encrypt({ user, expires });
+
+const sessionObject = {
+
+    name: user.name,
+    email: user.email,
+    profile_photo: user.profile_photo,
+    role_id: user.role_id,
+    status: user.status,
+    contact_info: user.contact_info,
+  };
+    const sessionString = JSON.stringify(sessionObject);
+
+  const sessionCrypted = await encrypt(sessionString);
 
   // Save the session in a cookie
-  cookies().set("session", session, { expires, httpOnly: true });
+  cookies().set("session", sessionCrypted, { expires, httpOnly: true });
 
      return true
 }
@@ -44,9 +56,13 @@ export async function createSession(user) {
 
 
 export async function getSession() {
-  const session = cookies().get("session")?.value;
-  if (!session) return null;
-  return await decrypt(session);
+  const sessionString = cookies().get("session")?.value;
+
+
+  if (!sessionString) return null;
+      const sessionCrypted = await decrypt(sessionString);
+        // const session = JSON.stringify(sessionCrypted);
+  return JSON.stringify(sessionCrypted);
 }
 
 export async function logoutCookies() {

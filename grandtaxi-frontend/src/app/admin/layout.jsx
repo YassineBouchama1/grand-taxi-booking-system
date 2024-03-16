@@ -1,21 +1,9 @@
 'use client'
-import { useSelector } from "react-redux";
 import NavBar from "../ui/admin/NavBar";
 import SideBar from "../ui/admin/SideBar";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import isAuth from "@/lib/isAuth";
 
-
-export default  function AdminLayout({ children }) {
-  const session = true;
-
-  const userStatus = useSelector((state) => state.auth.user);
-  const route = useRouter();
-
-  useEffect(() => {
-    if (!userStatus && userStatus?.role_id !== 1) return route.push('/');
-  }, []);
-
+const Layout = ({ children })=> {
 
   return (
     <main className="flex">
@@ -27,3 +15,5 @@ export default  function AdminLayout({ children }) {
     </main>
   );
 }
+
+export default isAuth(Layout,1);

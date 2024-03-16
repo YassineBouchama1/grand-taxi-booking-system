@@ -9,14 +9,14 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const FormSearchLonger = () => {
+    const searchParams = useSearchParams()
     const [cities, setCities] = useState([]);
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
-    const [date, setDate] = useState(null);
+    const [date, setDate] = useState(searchParams.get('date') ? searchParams.get('date'):null);
     const [rating, setRating] = useState(null);
     const [car, setCar] = useState(null);
 
-const searchParams = useSearchParams()
     const router = useRouter()
     // Fetch cities data on component mount
     useLayoutEffect(() => {
@@ -61,7 +61,7 @@ const searchParams = useSearchParams()
                 <select value={start} onChange={(e) => setStart(e.target.value)} id="departure" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500 ">
                     <option className="text-gray-400" value='' disabled selected>Pick departure</option>
                     {cities?.data?.map((city, index) => (
-                        <option key={index} value={city.id} >{city.name}</option>
+                        <option key={index} value={city.id} selected={searchParams.get('start') == city.id}>{city.name}</option>
                     ))}
 
                 </select>
@@ -69,9 +69,9 @@ const searchParams = useSearchParams()
 
             <div className="col-span-2 sm:col-span-1 ">
                 <select value={end} onChange={(e) => setEnd(e.target.value)} id="destination" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
-                    <option className="text-gray-400 " value="" disabled >Pick destination</option>
+                    <option className="text-gray-400 " value="" disabled  selected>Pick destination</option>
                     {cities?.data?.map((city, index) => (
-                        <option key={index} value={city.id} selected={searchParams?.get('start') === city.id} >{city.name}</option>
+                        <option key={index} value={city.id} selected={searchParams.get('end') == city.id} >{city.name}</option>
                     ))}
                 </select>
             </div>
@@ -86,19 +86,20 @@ const searchParams = useSearchParams()
             <select onChange={(e) => setRating(e.target.value)} class="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
                 <option class="text-gray-400" value="" disabled selected>Select Rate</option>
 
-                <option value="null">All</option>
-                <option value="4">5</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
+                <option selected={searchParams.get('typeCar') === 'bmw'} value="">All</option>
+                <option selected={searchParams.get('rating') === 5} value="5">5</option>
+                <option selected={searchParams.get('rating') === 4} value="4">4</option>
+                <option selected={searchParams.get('rating') === 3} value="3">3</option>
+                <option selected={searchParams.get('rating') === 2} value="2">2</option>
+                <option selected={searchParams.get('rating') === 1} value="1">1</option>
 
             </select>
             <select onChange={(e) => setCar(e.target.value)} class="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500">
                 <option class="text-gray-400" value="" disabled selected>Select Car</option>
 
-                <option value="bmw">BMW</option>
-                <option value="tesla">TESLA</option>
-                <option value="cyberpunk">cyberpunk</option>
+                <option selected={searchParams.get('typeCar') === 'bmw'} value="bmw">BMW</option>
+                <option selected={searchParams.get('typeCar') === 'tesla'} value="tesla">TESLA</option>
+                <option selected={searchParams.get('typeCar') === 'cyberpunk'} value="cyberpunk">cyberpunk</option>
         
 
             </select>

@@ -4,10 +4,8 @@ import Error from "@/app/ui/admin/Error";
 import Loading from "@/app/ui/shared/Loading";
 import notify from "@/hooks/useNotifaction";
 import AdminApi from "@/services/AdminApi";
-import TripApi from "@/services/TripApi";
 import { axiosClient } from "@/services/axios";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 import { useLayoutEffect, useState } from "react";
 const FormTrip = () => {
@@ -24,7 +22,6 @@ const FormTrip = () => {
     const [createdMsg, setCreatedMsg] = useState('');
     const [errorsMsg, setErrorsMsg] = useState([]);
     const [trips, setTrips] = useState([])
-    const [passengers, setPassengers] = useState([])
 
 
 

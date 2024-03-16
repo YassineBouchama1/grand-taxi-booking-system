@@ -4,16 +4,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 
-
-const initialState= {
-  role:'',
-  token:localStorage.getItem('token')?localStorage.getItem('token'):null,
-  email:'',
-  status:'',
-  user:  localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
-
-  isloading: false,
+const initialState = {
+  role: '',
+  token: typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null,
+  email: '',
+  status: '',
+  user: typeof localStorage !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+  isLoading: false,
 };
+
 
 export const AuthSlice = createSlice({
   name: "auth",

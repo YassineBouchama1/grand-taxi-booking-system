@@ -1,21 +1,19 @@
 'use client'
 
-import { setDate, setQuery, setTrips } from "@/Redux/trip/tripSlice";
 import notify from "@/hooks/useNotifaction";
 import { axiosClient } from "@/services/axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 const FromSearch = () => {
+
     const [cities, setCities] = useState([]);
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
     const [date, setDate] = useState(null);
+    const [loading, setLoading] = useState(false);
 
 
-  
 const router = useRouter()
     // Fetch cities data on component mount
     useLayoutEffect(() => {
@@ -32,14 +30,20 @@ const router = useRouter()
 
     const onSendToSearchPage = async () => {
         console.log('clicked');
-
+        // setLoading(true)
+        // console.log(loading)
         // Validate if the user has filled all inputs
         if (!date && !start && !end) {
+            setLoading(false)
+
             return notify('Fill inputs first', 'warn');
         }
 
         // Construct the query string
         let queryString = '';
+        // if (!date && searchParams.date) {
+        //     queryString += `date=${searchParams.date}&`;
+        // }
         if (date) {
             queryString += `date=${date}&`;
         }
@@ -54,9 +58,11 @@ const router = useRouter()
         if (queryString.endsWith('&')) {
             queryString = queryString.slice(0, -1);
         }
-        console.log(queryString)
+        // console.log(queryString)
         // Send the user to the search page with new params
         router.push(`/search?${queryString}`);
+        setLoading(false)
+
     };
 
 
@@ -87,7 +93,7 @@ const router = useRouter()
 
 
             <div className="col-span-2 sm:col-span-1 ">
-                <input onChange={(e) => setDate(e.target.value)} type="date" name="date" id="date" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500" />
+                <input  onChange={(e) => setDate(e.target.value)} type="date" name="date" id="date" className="w-full py-2 px-4 border border-gray-400 rounded-lg focus:outline-none focus:border-green-500" />
             </div>
         </div>
   

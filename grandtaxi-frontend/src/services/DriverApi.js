@@ -1,5 +1,4 @@
 'use client'
-import axios from "axios"
 import { axiosClient } from "./axios"
 
 const DriverApi = {
@@ -16,7 +15,7 @@ const DriverApi = {
     update: async (payload) => {
  
     //  await axios.get('http://127.0.0.1:80/sanctum/csrf-cookie');
-    return await axiosClient.put(`/drivers/update`, payload)
+    return await axiosClient.post(`/drivers/update`, payload)
   },
 }
 

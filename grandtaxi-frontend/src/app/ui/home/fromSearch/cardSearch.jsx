@@ -15,14 +15,20 @@ const CardSearch = ({trip}) => {
 const router = useRouter()
 console.log(trip)
     const [toggle, setToggle] = useState(false)
+    const [places, setPLaces] = useState(1)
     const user = useSelector((state) => state.auth.user)
 
 
 
     const onReservation = async ()=>{
 
-    console.log(user)
 
+const isValid = (trip.reservations + places) >  trip.seatsTotal
+console.log(isValid)
+if(!isValid){
+     return notify("not enugh seats .", "warn");
+}
+// return 
     //chekc if useer is passenger
     if (user?.role_id !== 2){
         return notify("You Are Not Allow To Resserve .", "warn");
@@ -30,7 +36,9 @@ console.log(trip)
     }
         console.log(trip.id)
     const formData = {
-        "trip_id":trip.id
+        "trip_id":trip.id,
+        "places":places,
+
     }
 
     const response = await axiosClient.post('/reservations/create', formData)
@@ -38,7 +46,8 @@ console.log(trip)
       setToggle(true)
       //scroll to the top after reserve
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        router.push('/passenger')
+        // router.push('/passenger')
+        redirect('/passenger')
 
     }
     console.log(response)
@@ -56,15 +65,19 @@ console.log(trip)
             </div>
             <div class="ticket-wrapper-cities flex justify-between gap-x-4  items-center">
 
-           
+
 
                 <div class="text-center ">
                     <i class="fa-solid fa-arrow-right-long text-green-700"></i>
                     <p>seats : {trip.seats}</p>
                 </div>
 
-           
 
+<input type="number"  
+className="border-2 rounded-md text-center px-4  text-green-500"
+
+ onChange={(e)=>setPLaces(e.target.value)} 
+ placeholder="choose how many place u want reserve"></input>
             </div>
             <div class="ticket-wrapper-price text-center flex flex-col gap-4">
                 <h3 class="text-green-600 text-bold text-2xl">${trip.price}</h3>

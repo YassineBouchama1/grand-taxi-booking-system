@@ -3,6 +3,7 @@
 import { setToken, setUser } from "@/Redux/auth/authSlice";
 import notify from "@/hooks/useNotifaction";
 import { createSession } from "@/lib/session";
+import { createSessionClient } from "@/lib/sessionClient";
 import { axiosClient } from "@/services/axios";
 import Image from "next/image";
 
@@ -26,7 +27,7 @@ const dispatch =useDispatch()
     });
     const [errors, setErrors] = useState({});
     const [createdMsg, setCreatedMsg] = useState('');
-    const [errorsMsg, setErrorsMsg] = useState([]);
+    const [errorsMsg, setErrorsMsg] = useState('');
 
 
     const handleChange = (e) => {
@@ -59,7 +60,7 @@ const dispatch =useDispatch()
             // await axiosClient.get('/sanctum/csrf-cookie');
             // dispatch(setUser({ 'name': 'hole' }));
             const response = await axiosClient.post('/auth/login', formData);
-            console.log(response);
+            console.log(response.response);
             if (response.status === 201) {
                 if (response.data.data.user.status === 'deleted') return notify('you are suspanded','warn')
                 setCreatedMsg(response.data.message)
@@ -68,7 +69,10 @@ const dispatch =useDispatch()
                 const user = response.data.data.user
                 dispatch(setToken(token));
                 dispatch(setUser(user));
-                // createSession(user)
+                // save user info innlocalstorage
+            //   await  createSessionClient(user,token)
+              
+               await createSession(user)
                 
             }
     
@@ -80,15 +84,15 @@ const dispatch =useDispatch()
             if (error.response.status === 401){
                 setErrorsMsg(error.response.data.message);
             }
-            // Check if error.response exists and has data and errors properties
-            if (error.response && error.response.data && error.response.data.errors) {
-                // Extract error messages from the response
-                const errorMessages = Object.values(error.response.data.errors);
-                setErrorsMsg(errorMessages);
-            } else {
-                // If the error structure is different or unknown, handle it accordingly
-                setErrorsMsg(['An unexpected error occurred.']);
-            }
+            // // Check if error.response exists and has data and errors properties
+            // if (error.response && error.response.data && error.response.data.errors) {
+            //     // Extract error messages from the response
+            //     const errorMessages = Object.values(error.response.data.errors);
+            //     setErrorsMsg(errorMessages);
+            // } else {
+            //     // If the error structure is different or unknown, handle it accordingly
+            //     setErrorsMsg(['An unexpected error occurred.']);
+            // }
         }
     };
 
@@ -106,10 +110,11 @@ const dispatch =useDispatch()
             </div>
 
             {createdMsg && <p className="text-green-500">{createdMsg}</p>}
+            {errorsMsg && <p className="text-red-500">{errorsMsg}</p>}
 
-            {errorsMsg &&
+            {/* {errorsMsg &&
                 errorsMsg.map((error, index) => <p key={index} className="text-red-500">{error[0]}</p>)
-            }
+            } */}
 
             <form className="mt-8 space-y-6" onSubmit={handleSubmitLogin}>
                 <input type="hidden" name="remember" value="true"></input>

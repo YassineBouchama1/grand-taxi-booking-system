@@ -20,22 +20,45 @@ export async function decrypt(input){
 }
 
 
-// save token to local storge
-export async function createSessionClient(user) {
-  // Create the session
+// save user object to local storge
+export async function createSession(user) {
+  // Create the session object
   const expires = new Date(Date.now() + 10 * 1000);
-  const session = await encrypt({ user, expires });
+
+  const session = {
+    expires,
+    name: user.name,
+    email: user.email,
+    profile_photo: user.profile_photo,
+    role_id: user.role_id,
+    status: user.status,
+    contact_info: user.contact_info,
+  };
+
+  // Stringify the session object before saving it
+  const sessionString = JSON.stringify(session);
+
+  // Save the session in local storage
+  const sessionCrypted = await encrypt(sessionString);
+  localStorage.setItem("session", sessionCrypted);
+
+  return true;
+}
+
  
 
-     localStorage.setItem('token',session)
-     return true
-}
+
 
 export async function getSessionClient() {
-  const session = localStorage.getItem('token')
+  const sessionString = localStorage.getItem('session')
+  
+
+  console.log(session)
   if (!session) return null;
+    const session = JSON.parse(sessionString);
    return await decrypt(session);
 }
+
 
 export async function logout() {
 localStorage.removeItem('token')

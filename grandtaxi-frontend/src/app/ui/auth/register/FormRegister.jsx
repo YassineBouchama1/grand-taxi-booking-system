@@ -74,7 +74,7 @@ const FormRegister = ({ setToggleLogin }) => { // Added curly braces around setT
                 const errorMessages = Object.values(error.response.data.errors);
                 setErrorsMsg(errorMessages);
             } else {
-                setErrorsMsg(['An unexpected error occurred.']);
+                
             }
         }
     };

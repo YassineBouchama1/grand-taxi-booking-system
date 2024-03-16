@@ -3,6 +3,7 @@ import React from "react";
 import StatisticsCard from "./StatisticsCard.jsx";
 import { useQuery } from "@tanstack/react-query";
 import AdminApi from "@/services/AdminApi.js";
+import Error from "../Error.jsx";
 
 
 

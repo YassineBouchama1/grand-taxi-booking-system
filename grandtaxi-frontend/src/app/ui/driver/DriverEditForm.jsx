@@ -32,7 +32,7 @@ const dispatch = useDispatch()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-  
+  console.log(formData)
         const formDataWithImage = new FormData();
         if (image){
 
@@ -46,12 +46,11 @@ const dispatch = useDispatch()
         try {
          
             const response = await DriverApi.update(formDataWithImage)
-            // const response = axiosClient.put(`/drivers/update`, formDataWithImage)
             
             console.log(response);
             if (response.status === 201) {
-           notify('profile updated','success')
                 dispatch(setUser(response.data.user));
+                notify('profile updated','success')
                 setToggleEdit(false)
             }
 

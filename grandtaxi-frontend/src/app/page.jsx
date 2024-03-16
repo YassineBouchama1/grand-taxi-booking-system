@@ -42,11 +42,13 @@ export default async function Home() {
                     objectFit="cover"
                     objectPosition="center"
                     />
-                <img
+                    <Image
                     id="bus_img"
                     src="/assets/bus.png"
                     alt="bus"
-                    className="absolute w-[100px] h-auto bottom-0 right-0 z-30"
+                    width='10'
+                    height='10'
+                    className="absolute w-[100px] h-auto bottom-0 left-0 z-30"
                     />
             </section>
 

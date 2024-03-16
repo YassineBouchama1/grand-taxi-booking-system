@@ -54,6 +54,7 @@ const router = useRouter()
 
         router.push(url);
     };
+                                //   <button onClick={() => handleDelete(favorite.id)}>Delete</button>
 
 
   return(
@@ -83,7 +84,6 @@ const router = useRouter()
                               <td>{favorite.pick_up_city}</td>
                               <td>{favorite.destination_city}</td>
                               <td>
-                                  <button onClick={() => handleDelete(favorite.id)}>Delete</button>
                                   <button onClick={() => searchWithit({ start: favorite.pick_up_city_id, end: favorite.destination_city_id })}>Search</button>
                               </td>
                           </tr>
